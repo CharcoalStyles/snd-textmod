@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --text: #f5ebec;
+    --text-highlight: #a69e9f;
+    --background: #070303;
+    --primary: #fd6d6d;
+    --primary-highlight: #f9a3a3;
+    --secondary: #8f9f04;
+    --secondary-highlight: #b3c100;
+    --accent: #896fb8;
+    --accent-highlight: #b3a0d0;
+  }
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: var(--background);
+}
