@@ -1,5 +1,6 @@
 import { Header } from "@/components";
-import { Text, Hero } from "@/components/ui";
+import { TextmodList } from "@/components/TextmodList";
+import { Text } from "@/components/ui";
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ export default function Home() {
         </a>
       </Header>
       <div className="mt-10">
-        <Text fontSize="2xl" variant="secondary">//TODO: Add list of textmods here</Text>
+        <TextmodList />
       </div>
     </main>
   );
