@@ -34,8 +34,13 @@ export function SbAuth({ isOpen, onClose }: SbAuthProps) {
             supabaseClient={supabase}
             appearance={{
               theme: ThemeSupa,
+              style:{
+                input:{
+                  color: "white",
+                }
+              }
             }}
-            redirectTo="/new-user"
+            redirectTo="new-user"
             providers={[]}
           />
         </div>

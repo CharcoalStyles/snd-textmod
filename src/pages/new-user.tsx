@@ -10,9 +10,9 @@ const NewUserPage: React.FC = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [supabase] = useAtom(supabaseAtom);
-  const { user, userData, isLoading, error, refetch } = useUser();
+  const {user, userData, isLoading, error, refetch } = useUser();
   const [ucOne, setUcOne] = useState(true);
 
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -34,21 +34,19 @@ const NewUserPage: React.FC = () => {
         clearTimeout(timeoutRef.current);
       }
 
+      setLoading(true);
       timeoutRef.current = setTimeout(() => {
-        if (user === null) {
-          console.warn("No user found, redirecting to login");
+        if (user === null || (userData !== null && userData.length > 0)) {
           router.push("/");
+        } else {
+          setLoading(false);
         }
-
-        if (userData) {
-          console.warn("User already has profile, redirecting to dashboard");
-          router.push("/");
-        }
+        
       }, 500);
     }
-  }, [isLoading, user]);
+  }, [isLoading, user, userData]);
 
-  if (loading || !user) {
+  if (loading || !user || userData === null || userData.length > 0) {
     return (
       <div
         data-testid="loader"

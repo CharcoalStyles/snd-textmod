@@ -3,11 +3,11 @@ import { supabaseAtom } from "@/utils/supabase";
 import { User } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const userAtom = atom<User | null>(null);
 const userDataAtom = atom<
-  Database["public"]["Tables"]["profiles"]["Row"] | null
+  Array<Database["public"]["Tables"]["profiles"]["Row"]> | null
 >(null);
 
 export const useUser = () => {
@@ -32,14 +32,15 @@ export const useUser = () => {
     enabled: false,
     queryKey: ["userData", currentUser?.id ?? ""],
     queryFn: async () => {
-      if (userData) {
+      if (userData && userData.length > 0) {
         return userData;
       }
 
       if (currentUser === null) {
+        console.warn("No user found");
         return null;
       }
-
+      
       const { data, error: dbError } = await supabase
         .from("profiles")
         .select("*")
@@ -50,12 +51,8 @@ export const useUser = () => {
         throw dbError;
       }
 
-      if (data.length === 0) {
-        return null;
-      }
-
-      setUserData(data[0]);
-      return userData;
+      setUserData(data);
+      return data;
     },
   });
 
@@ -69,7 +66,7 @@ export const useUser = () => {
     user: currentUser,
     userData,
     error,
-    isLoading,
+    isLoading : isLoading && currentUser === null && userData === null,
     refetch: refetchUserData,
     clear: () => {
       if (currentUser) {
