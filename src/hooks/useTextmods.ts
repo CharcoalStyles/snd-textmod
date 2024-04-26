@@ -6,28 +6,32 @@ type UseTextmodsProps = {
   userId?: string;
   orderBy?: "newest" | "oldest" | "top";
   limit?: number;
+  lastDate?: Date;
 };
 
 export const useTextmods = ({
   limit = 10,
   orderBy = "newest",
   userId,
+  lastDate
 }: UseTextmodsProps) => {
   const [supabase] = useAtom(supabaseAtom);
   const queryClient = useQueryClient();
-  console.log("useTextMods");
 
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,
     queryKey: ["userData", "tms"],
     queryFn: async () => {
-      console.log("fetching data");
       let query = supabase
         .from("mods")
-        .select("*,mod_votes(*),mod_comments(*)");
+        .select("*,mod_votes(*), mod_comments(count), user_id(username)");
 
       if (userId) {
         query = query.eq("user_id", userId);
+      }
+
+      if (lastDate){
+        query = query.lt("created_at", lastDate);
       }
 
       if (orderBy === "newest") {
@@ -39,17 +43,25 @@ export const useTextmods = ({
       }
 
       const { data, error } = await query.limit(limit);
-      console.log("data", data);
 
       if (error) {
         console.error("Error fetching records:", error);
         throw error;
       }
 
-      return data;
+      const fixedData = data.map((mod) => {
+        //@ts-ignore
+        var creatorName:string = mod.user_id.username;
+        return {
+          ...mod,
+          username: creatorName,
+          createdDate: new Date(mod.created_at)
+        };
+      });
+
+      return fixedData;
     },
   });
 
-  console.log("data", data, "error", error, "isLoading", isLoading);
   return { data, error, isLoading, refetch };
 };

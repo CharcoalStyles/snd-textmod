@@ -7,13 +7,18 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    fontFamily: {
-      heading: [`var(--font-handjet)`],
-      body: [`var(--font-handjet)`],
+    fontSize: {
+      sm: "0.750rem",
+      base: "1rem",
+      xl: "1.25rem",
+      "2xl": "1.75rem",
+      "3xl": "2.25rem",
+      "4xl": "3.5rem",
+      "5xl": "4.5rem",
     },
-    fontWeight: {
-      normal: "400",
-      bold: "700",
+    fontFamily: {
+      heading: [`var(--font-jersey)`],
+      body: [`var(--font-cuprum)`],
     },
     extend: {
       colors: {
@@ -36,12 +41,7 @@ const config: Config = {
         },
         white: "#fff",
         black: "#000",
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+      }
     },
   },
   plugins: [],

@@ -11,21 +11,21 @@ export const Header = ({ children }: PropsWithChildren) => {
     <>
       <div className="flex flex-row p-4">
         <div className="w-full flex items-center justify-between">
+          <div className="flex-grow">
           {children}
-
+          </div>
           {isLoading ? (
             <div data-testid="loading-fragment"></div>
           ) : (
             <div
               data-testid="auth-userbadge"
-              className="flex w-1/2 justify-end content-center"
+              className="flex justify-end content-center flex-shrink"
             >
               {user ? (
                 (() => {
                   return <UserBadge />;
                 })()
               ) : (
-                <>
                   <Button
                     variant="primary"
                     label="Login"
@@ -35,7 +35,6 @@ export const Header = ({ children }: PropsWithChildren) => {
                       setShowAuth(true);
                     }}
                   />
-                </>
               )}
             </div>
           )}

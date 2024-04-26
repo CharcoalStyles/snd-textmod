@@ -2,12 +2,13 @@ import React, { PropsWithChildren, useMemo } from "react";
 import { clsx } from "clsx";
 
 type TextProps = {
-  tag?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  tag?: "span" | "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   fontSize?: "sm" | "base" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   fontType?: "heading" | "body";
   variant?: "base" | "primary" | "secondary" | "accent" | "success" | "danger";
   onHover?: boolean;
   closeLines?: boolean;
+  scale?:boolean;
   "data-testid"?: string;
   onClick?: () => void;
 };
@@ -41,6 +42,7 @@ export const Text = ({
   closeLines=false,
   variant,
   children,
+  scale,
   onClick,
   "data-testid": dataTestId,
 }: PropsWithChildren<TextProps>) => {
@@ -70,17 +72,17 @@ export const Text = ({
         case "sm":
           return "text-sm";
         case "base":
-          return "text-base";
+          return scale ? "text-sm md:text-base" :"text-base";
         case "xl":
-          return "text-xl";
+          return scale ? "text-sm md:text-xl" :"text-xl";
         case "2xl":
-          return "text-2xl";
+          return scale ? "text-base md:text-2xl" :"text-2xl";
         case "3xl":
-          return "text-3xl";
+          return scale ? "text-xl md:text-3xl" :"text-3xl";
         case "4xl":
-          return "text-4xl";
+          return scale ? "text-2xl md:text-4xl" :"text-4xl";
         case "5xl":
-          return "text-5xl";
+          return scale ? "text-3xl md:text-5xl" :"text-5xl";
         default:
           return "text-base";
       }
@@ -93,6 +95,7 @@ export const Text = ({
         "font-heading": fontType === "heading",
         "font-body": fontType === "body",
         "hover:underline": onHover,
+        "hover:cursor-pointer": onHover,
         "leading-4": closeLines,
       },
     ]);
@@ -111,6 +114,8 @@ export const Text = ({
       return <h5 onClick={() => onClick && onClick()} data-testid={dataTestId} className={className}>{children}</h5>;
     case "h6":
       return <h6 onClick={() => onClick && onClick()} data-testid={dataTestId} className={className}>{children}</h6>;
+      case "span":
+        <span onClick={() => onClick && onClick()} data-testid={dataTestId} className={className}>{children}</span>
     default:
       return <p onClick={() => onClick && onClick()} data-testid={dataTestId} className={className}>{children}</p>;
   }
