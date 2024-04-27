@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "supabase:schema": "supabase gen types typescript --project-id 'rvkphcsliqyyrsozvbmk' --schema public > src/util/schema.ts"
+    "supabase:schema": "supabase gen types typescript --project-id 'rvkphcsliqyyrsozvbmk' --schema public > src/utils/schema.ts"
   },
   "dependencies": {
     "@supabase/auth-helpers-react": "^0.5.0",

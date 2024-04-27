@@ -1,8 +1,11 @@
 import { Text } from "@/components/ui";
 import { Database } from "@/utils/schema";
 
-type TextmodCardProps = {
-  textmod: Database["public"]["Tables"]["mods"]["Row"];
+export type TextmodCardProps = {
+  // textmod: Database["public"]["Tables"]["mods"]["Row"];
+  id: number;
+  name: string;
+  description: string;
   creatorName: string;
   commentCount: number;
   upvotes: number;
@@ -11,10 +14,11 @@ type TextmodCardProps = {
 };
 
 export const TextmodCard = ({
+  description,
+  name,
   commentCount,
   creatorName,
   downvotes,
-  textmod,
   upvotes,
   createdDate,
 }: TextmodCardProps) => {
@@ -23,9 +27,9 @@ export const TextmodCard = ({
       <div className="flex flex-col p-2">
         <div>
           <Text onHover fontSize="2xl" fontType="heading" variant="accent">
-            {textmod.name}
+            {name}
           </Text>
-          <Text fontSize="xl" fontType="body">{textmod.description}</Text>
+          <Text fontSize="xl" fontType="body">{description}</Text>
         </div>
       </div>
       <div className="flex flex-col p-2">

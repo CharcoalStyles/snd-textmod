@@ -1,20 +1,22 @@
+import { TextmodCardProps } from "@/components/TextmodCard";
+import { Database } from "@/utils/schema";
 import { supabaseAtom } from "@/utils/supabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
-type UseTextmodsProps = {
+type UseTextmodsQueryProps = {
   userId?: string;
   orderBy?: "newest" | "oldest" | "top";
   limit?: number;
   lastDate?: Date;
 };
 
-export const useTextmods = ({
+export const useTextmodsQuery = ({
   limit = 10,
   orderBy = "newest",
   userId,
   lastDate
-}: UseTextmodsProps) => {
+}: UseTextmodsQueryProps) => {
   const [supabase] = useAtom(supabaseAtom);
   const queryClient = useQueryClient();
 
@@ -53,10 +55,15 @@ export const useTextmods = ({
         //@ts-ignore
         var creatorName:string = mod.user_id.username;
         return {
-          ...mod,
-          username: creatorName,
-          createdDate: new Date(mod.created_at)
-        };
+          id: mod.id,
+          commentCount: mod.mod_comments[0].count,
+          createdDate: new Date(mod.created_at),
+          creatorName: creatorName,
+          description: mod.description,
+          downvotes: mod.mod_votes.filter(({ upvote }) => !upvote).length,
+          name: mod.name,
+          upvotes: mod.mod_votes.filter(({ upvote }) => upvote).length,
+        } as TextmodCardProps;
       });
 
       return fixedData;

@@ -26,7 +26,11 @@ export default function Home() {
               Latest
             </Text>
           </div>
-          <TextmodList orderBy="newest" />
+          <TextmodList
+            query={{
+              orderBy: "newest",
+            }}
+          />
         </div>
 
         <div className="basis-72 flex-grow">
@@ -35,19 +39,17 @@ export default function Home() {
               Highest Rated (All)
             </Text>
           </div>
-          <TextmodList orderBy="top" />
+          <TextmodList table="mods_rated_alltime" />
         </div>
-
+{/* 
         <div className="basis-72 flex-grow">
           <div className="flex justify-center">
             <Text fontSize="3xl" fontType="heading">
               Highest Rated (7 days)
             </Text>
           </div>
-          <TextmodList orderBy="top" lastDate={
-            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          } />
-        </div>
+          <TextmodList table="mods_rated_7days" />
+        </div> */}
       </div>
     </main>
   );

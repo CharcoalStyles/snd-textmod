@@ -122,6 +122,52 @@ export type Database = {
           },
         ]
       }
+      mods_rated_7days: {
+        Row: {
+          id: number
+          total_votes: number | null
+        }
+        Insert: {
+          id: number
+          total_votes?: number | null
+        }
+        Update: {
+          id?: number
+          total_votes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mods_rated_7days_duplicate_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "mods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mods_rated_alltime: {
+        Row: {
+          id: number
+          total_votes: number | null
+        }
+        Insert: {
+          id: number
+          total_votes?: number | null
+        }
+        Update: {
+          id?: number
+          total_votes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mods_rated_alltime_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "mods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
