@@ -62,6 +62,7 @@ export const useTextmodsQuery = ({
           description: mod.description,
           downvotes: mod.mod_votes.filter(({ upvote }) => !upvote).length,
           name: mod.name,
+          mod: mod.mod,
           upvotes: mod.mod_votes.filter(({ upvote }) => upvote).length,
         } as TextmodCardProps;
       });

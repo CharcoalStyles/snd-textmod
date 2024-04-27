@@ -52,6 +52,8 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
           ).length,
           //@ts-ignore
           id: realMod.id,
+          //@ts-ignore
+          mod: realMod.mod,
         } as TextmodCardProps;
       });
 
