@@ -1,6 +1,6 @@
 import { Header } from "@/components";
 import { Search } from "@/components/Search";
-import { TextmodList } from "@/components/TextmodList";
+import { TextmodList } from "@/components";
 import { Text } from "@/components/ui";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
             fontType="heading"
             tag="h1"
             variant="primary">
-            Slice &amp; Dice Textmod DB
+            Slice &amp; Dice TextMod DB
           </Text>
         </a>
       </Header>

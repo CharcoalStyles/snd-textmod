@@ -35,7 +35,7 @@ export function Modal({
         overLayClassName
       )}
       className={clsx(
-        "mx-auto mt-32 px-12 py-8 w-2/5 max-w-xl absolute inset-x-0 rounded-xl bg-black border border-slate-600",
+        "mx-auto mt-32 px-12 py-8 w-full max-w-xl absolute inset-x-0 bg-black border border-accent",
         className
       )}>
       {children}

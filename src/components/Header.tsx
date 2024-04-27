@@ -2,6 +2,7 @@ import { Button } from "@/components/ui";
 import { SbAuth, UserBadge } from "@/components";
 import React, { PropsWithChildren, useState } from "react";
 import { useUser } from "@/hooks/useUser";
+import { AddNewMod } from "./AddNewMod";
 
 export const Header = ({ children }: PropsWithChildren) => {
   const [showAuth, setShowAuth] = useState(false);
@@ -11,30 +12,32 @@ export const Header = ({ children }: PropsWithChildren) => {
     <>
       <div className="flex flex-row p-4">
         <div className="w-full flex items-center justify-between">
-          <div className="flex-grow">
-          {children}
-          </div>
+          <div className="flex-grow">{children}</div>
           {isLoading ? (
             <div data-testid="loading-fragment"></div>
           ) : (
             <div
               data-testid="auth-userbadge"
-              className="flex justify-end content-center flex-shrink"
-            >
+              className="flex justify-end content-center flex-shrink">
               {user ? (
                 (() => {
-                  return <UserBadge />;
+                  return (
+                    <div className="flex flex-row gap-4">
+                      <AddNewMod />
+                      <UserBadge />
+                    </div>
+                  );
                 })()
               ) : (
-                  <Button
-                    variant="primary"
-                    label="Login"
-                    size="large"
-                    className="mr-4"
-                    onClick={() => {
-                      setShowAuth(true);
-                    }}
-                  />
+                <Button
+                  variant="primary"
+                  label="Login"
+                  size="large"
+                  className="mr-4"
+                  onClick={() => {
+                    setShowAuth(true);
+                  }}
+                />
               )}
             </div>
           )}
