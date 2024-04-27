@@ -12,7 +12,7 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
 
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,
-    queryKey: ["userData", "calcMods", table],
+    queryKey: ["calcMods", table, ],
     queryFn: async () => {
       const { data, error } = await supabase
         .from(table)

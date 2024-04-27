@@ -7,6 +7,7 @@ type TextProps = {
   fontType?: "heading" | "body";
   variant?: "base" | "primary" | "secondary" | "accent" | "success" | "danger";
   onHover?: boolean;
+  showHoverable?: boolean;
   closeLines?: boolean;
   scale?:boolean;
   "data-testid"?: string;
@@ -39,6 +40,7 @@ export const Text = ({
   fontSize = "base",
   fontType = "body",
   onHover = false,
+  showHoverable = false,
   closeLines=false,
   variant,
   children,
@@ -94,7 +96,8 @@ export const Text = ({
       {
         "font-heading": fontType === "heading",
         "font-body": fontType === "body",
-        "hover:underline": onHover,
+        "underline": showHoverable && onHover,
+        "hover:underline":  onHover,
         "hover:cursor-pointer": onHover,
         "leading-4": closeLines,
       },

@@ -1,4 +1,5 @@
 import { Header } from "@/components";
+import { Search } from "@/components/Search";
 import { TextmodList } from "@/components/TextmodList";
 import { Text } from "@/components/ui";
 
@@ -19,8 +20,13 @@ export default function Home() {
           </Text>
         </a>
       </Header>
-      <div className="mt-10 mx-4 flex flex-row gap-4 flex-wrap">
-        <div className="basis-72 flex-grow">
+      <div className="w-full">
+        <div className="mx-auto w-full md:w-2/3 lg:w-1/2">
+          <Search />
+        </div>
+      </div>
+      <div className="mt-10 mx-4 flex flex-row gap-4 justify-center flex-wrap">
+        <div className="basis-72 max-w-96  flex-grow">
           <div className="flex justify-center">
             <Text fontSize="3xl" fontType="heading">
               Latest
@@ -33,7 +39,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="basis-72 flex-grow">
+        <div className="basis-72 max-w-96 flex-grow">
           <div className="flex justify-center">
             <Text fontSize="3xl" fontType="heading">
               Highest Rated (All)
@@ -41,7 +47,7 @@ export default function Home() {
           </div>
           <TextmodList table="mods_rated_alltime" />
         </div>
-{/* 
+        {/* 
         <div className="basis-72 flex-grow">
           <div className="flex justify-center">
             <Text fontSize="3xl" fontType="heading">

@@ -191,7 +191,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      search_mods: {
+        Args: {
+          keyword: string
+        }
+        Returns: {
+          created_at: string
+          description: string | null
+          id: number
+          mod: string | null
+          name: string | null
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
