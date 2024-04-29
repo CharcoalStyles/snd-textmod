@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
 type UseTextmodsQueryProps = {
-  userId?: string;
+  userName?: string;
   orderBy?: "newest" | "oldest" | "top";
   limit?: number;
   lastDate?: Date;
@@ -14,25 +14,49 @@ type UseTextmodsQueryProps = {
 export const useTextmodsQuery = ({
   limit = 10,
   orderBy = "newest",
-  userId,
-  lastDate
+  userName,
+  lastDate,
 }: UseTextmodsQueryProps) => {
   const [supabase] = useAtom(supabaseAtom);
   const queryClient = useQueryClient();
 
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data: userData, error: userError } = useQuery({
     enabled: true,
     queryKey: ["userData", "tms"],
+    queryFn: async () => {
+      if (!userName)
+        return {
+          id: "",
+        };
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id")
+        .ilike("username", userName)
+        .single();
+
+      if (error) {
+        console.error("Error fetching records:", error);
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
+  const { data, error, isLoading, refetch } = useQuery({
+    enabled: true,
+    queryKey: ["mods"],
     queryFn: async () => {
       let query = supabase
         .from("mods")
         .select("*,mod_votes(*), mod_comments(count), user_id(username)");
 
-      if (userId) {
-        query = query.eq("user_id", userId);
+      if (userData && userData?.id !== "") {
+        query = query.eq("user_id", userData.id);
       }
 
-      if (lastDate){
+      if (lastDate) {
         query = query.lt("created_at", lastDate);
       }
 
@@ -53,12 +77,20 @@ export const useTextmodsQuery = ({
 
       const fixedData = data.map((mod) => {
         //@ts-ignore
-        var creatorName:string = mod.user_id.username;
+        var creatorName: string = mod.user_id.username;
+        //@ts-ignore
+        var creatorSlug: string = mod.user_id.username
+          .toLowerCase()
+          .replace(" ", "-");
+
         return {
           id: mod.id,
           commentCount: mod.mod_comments[0].count,
           createdDate: new Date(mod.created_at),
-          creatorName: creatorName,
+          creator: {
+            name: creatorName,
+            slug: creatorSlug,
+          },
           description: mod.description,
           downvotes: mod.mod_votes.filter(({ upvote }) => !upvote).length,
           name: mod.name,

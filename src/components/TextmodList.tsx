@@ -1,12 +1,12 @@
 import { useTextmodsQuery } from "@/hooks/useTextmodsQuery";
 import { Text } from "@/components/ui";
 import { Loader } from "./Loader";
-import { TextmodCard } from "./TextmodCard";
+import { TextmodCard, TextmodCardProps } from "./TextmodCard";
 import { Database } from "@/utils/schema";
 import { useTextModsCalculated } from "@/hooks/useTextModsCalculated";
 
 type QueryProps = {
-  userId?: string;
+  userName?: string;
   orderBy?: "newest" | "oldest" | "top";
   lastDate?: Date;
   limit?: number;
@@ -35,16 +35,16 @@ const TableList = ({table}: {table : keyof Database["public"]["Tables"]}) => {
       {isLoading && <Loader />}
       {error && <p>Error: {error.message}</p>}
       {data &&
-        data.map((textmod) => <TextmodCard key={textmod.id} {...textmod} />)}
+        data.map((textmod) => <RenderCard key={textmod.id} textmod={textmod} />)}
     </div>
   );
 }
 
-const QueryList = ({ lastDate, limit, orderBy, userId }: QueryProps) => {
+const QueryList = ({ lastDate, limit, orderBy, userName }: QueryProps) => {
   const { data, error, isLoading } = useTextmodsQuery({
     limit,
     orderBy,
-    userId,
+    userName,
     lastDate,
   });
 
@@ -53,7 +53,11 @@ const QueryList = ({ lastDate, limit, orderBy, userId }: QueryProps) => {
       {isLoading && <Loader />}
       {error && <p>Error: {error.message}</p>}
       {data &&
-        data.map((textmod) => <TextmodCard key={textmod.id} {...textmod} />)}
+        data.map((textmod) => <RenderCard key={textmod.id} textmod={textmod} />)}
     </div>
   );
 };
+
+const RenderCard = ({ textmod }:{textmod:TextmodCardProps}) => {
+  return <div className="mb-1"><TextmodCard key={textmod.id} {...textmod} /></div>;
+}

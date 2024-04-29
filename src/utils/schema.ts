@@ -1,3 +1,5 @@
+import { StringifyOptions } from "querystring"
+
 export type Json =
   | string
   | number
@@ -171,18 +173,18 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
-          id: string
-          username: string | null
+          id: StringifyOptions
+          username: string
         }
         Insert: {
           created_at?: string
           id?: string
-          username?: string | null
+          username?: string
         }
         Update: {
           created_at?: string
           id?: string
-          username?: string | null
+          username?: string
         }
         Relationships: []
       }

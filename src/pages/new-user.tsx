@@ -12,8 +12,9 @@ const NewUserPage: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [supabase] = useAtom(supabaseAtom);
-  const {user, userData, isLoading, error, refetch } = useUser();
+  const { user, userData, isLoading, error, refetch } = useUser();
   const [ucOne, setUcOne] = useState(true);
+  const [submitError, setSubmitError] = useState<string>();
 
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -41,7 +42,6 @@ const NewUserPage: React.FC = () => {
         } else {
           setLoading(false);
         }
-        
       }, 500);
     }
   }, [isLoading, user, userData]);
@@ -60,10 +60,30 @@ const NewUserPage: React.FC = () => {
 
   return (
     <NewUserForm
-      onSubmit={(result) => {
+      error={submitError}
+      onSubmit={async (result) => {
         if (!user) return;
 
         setLoading(true);
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("username", result.username);
+
+        if (error) {
+          console.error("Error fetching profiles:", error);
+          setLoading(false);
+          setSubmitError("Error creating user");
+          return;
+        }
+
+        if (data && data.length > 0) {
+          setLoading(false);
+          setSubmitError("Username already taken");
+          return;
+        }
+
         supabase
           .from("profiles")
           .insert({
@@ -92,10 +112,21 @@ export default NewUserPage;
 
 type NewUserFormProps = {
   onSubmit: (result: { username: string }) => void;
+  error?: string;
 };
 
-const NewUserForm = ({ onSubmit }: NewUserFormProps) => {
+const NewUserForm = ({ onSubmit, error }: NewUserFormProps) => {
   const [username, setUsername] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
+  useEffect(() => {
+    //show error if the username contains characters that are not allowed
+    if (username.match(/[^a-zA-Z0-9]/)) {
+      setDisableSubmit(true);
+    } else {
+      setDisableSubmit(false);
+    }
+  }, [username]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +159,16 @@ const NewUserForm = ({ onSubmit }: NewUserFormProps) => {
           </li>
         </ul>
       </div>
+
       <div className="pt-4 flex flex-col">
+        <Text fontSize="xl" fontType="body" variant="base">
+          Letters and numbers only
+        </Text>
+        {error && (
+          <Text fontSize="xl" fontType="body" variant="danger">
+            {error}
+          </Text>
+        )}
         <form className="pt-4 flex flex-col" onSubmit={handleSubmit}>
           <label htmlFor="usernameInput">
             <Text>Username:</Text>
@@ -141,7 +181,7 @@ const NewUserForm = ({ onSubmit }: NewUserFormProps) => {
             onChange={(e) => setUsername(e.target.value)}
             className="border border-gray-300 rounded-md px-4 py-2 mb-2"
           />
-          <Button variant="secondary" label="Submit" />
+          <Button disabled={disableSubmit} variant="secondary" label="Submit" />
         </form>
       </div>
     </div>

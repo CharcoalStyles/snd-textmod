@@ -10,7 +10,26 @@ type SbAuthProps = {
   children: JSX.Element;
   className?: string | ReactModal.Classes;
   overLayClassName?: string | ReactModal.Classes;
-  "data-testid"?: string;
+  variant?: "primary" | "secondary" | "accent" | "success" | "error";
+};
+
+const getBorderColour = (
+  variant: "primary" | "secondary" | "accent" | "success" | "error"
+) => {
+  switch (variant) {
+    case "primary":
+      return "border-primary";
+    case "secondary":
+      return "border-secondary";
+    case "accent":
+      return "border-accent";
+    case "success":
+      return "border-success";
+    case "error":
+      return "border-error";
+    default:
+      return "border-primary";
+  }
 };
 
 export function Modal({
@@ -19,11 +38,10 @@ export function Modal({
   children,
   className,
   overLayClassName,
-  "data-testid": testId,
+  variant = "primary",
 }: SbAuthProps) {
   return (
     <ReactModal
-      testId={testId}
       ariaHideApp={false}
       isOpen={isOpen}
       shouldCloseOnOverlayClick
@@ -35,7 +53,8 @@ export function Modal({
         overLayClassName
       )}
       className={clsx(
-        "mx-auto mt-32 px-12 py-8 w-full max-w-xl absolute inset-x-0 bg-black border border-accent",
+        "mx-auto mt-32 px-12 py-8 w-full max-w-xl absolute inset-x-0 bg-black border",
+        getBorderColour(variant),
         className
       )}>
       {children}

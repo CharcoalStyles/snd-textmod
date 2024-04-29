@@ -12,7 +12,7 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
 
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,
-    queryKey: ["calcMods", table, ],
+    queryKey: ["calcMods", table],
     queryFn: async () => {
       const { data, error } = await supabase
         .from(table)
@@ -26,7 +26,6 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
       }
 
       const fixedData = data.map((row) => {
-
         // Forgive me, for this is the only way to make this work
         // The data returned from Supabase is correct, but the logic they have for types is broken
         //@ts-ignore
@@ -36,8 +35,12 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
           commentCount: realMod.mod_comments[0].count,
           //@ts-ignore
           createdDate: new Date(realMod.created_at),
-          //@ts-ignore
-          creatorName: realMod.user_id.username,
+          creator: {
+            //@ts-ignore
+            name: realMod.user_id.username,
+            //@ts-ignore
+            slug: realMod.user_id.username.toLowerCase().replace(" ", "-"),
+          },
           //@ts-ignore
           description: realMod.description,
           //@ts-ignore

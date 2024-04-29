@@ -1,14 +1,16 @@
 import { Text } from "@/components/ui";
-import { Database } from "@/utils/schema";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export type TextmodCardProps = {
-  // textmod: Database["public"]["Tables"]["mods"]["Row"];
   id: number;
   name: string;
   mod: string;
   description: string;
-  creatorName: string;
+  creator: {
+    name: string;
+    slug: string;
+  };
   commentCount: number;
   upvotes: number;
   downvotes: number;
@@ -16,16 +18,18 @@ export type TextmodCardProps = {
 };
 
 export const TextmodCard = ({
+  id,
   description,
   name,
   mod,
   commentCount,
-  creatorName,
+  creator,
   downvotes,
   upvotes,
   createdDate,
 }: TextmodCardProps) => {
   const [copyText, setCopyText] = useState("Copy");
+  const router = useRouter();
 
   return (
     <div className="w-full flex flex-col border border-secondary">
@@ -36,6 +40,9 @@ export const TextmodCard = ({
               <Text
                 onHover
                 showHoverable
+                onClick={() => {
+                  router.push(`/textmod/${id}`);
+                }}
                 fontSize="2xl"
                 fontType="heading"
                 variant="accent">
@@ -64,8 +71,15 @@ export const TextmodCard = ({
       </div>
       <div className="flex flex-col p-2">
         <div className="flex flex-row justify-between">
-          <Text tag="span" fontType="body" showHoverable onHover>
-            {creatorName}
+          <Text
+            tag="span"
+            fontType="body"
+            showHoverable
+            onHover
+            onClick={() => {
+              router.push(`/user/${creator.slug}`);
+            }}>
+            {creator.name}
           </Text>
           <Text tag="span" fontType="body">
             {createdDate.toDateString()}
@@ -78,7 +92,9 @@ export const TextmodCard = ({
               fontType="body"
               onHover
               showHoverable
-              onClick={() => {}}>
+              onClick={() => {
+                router.push(`/textmod/${id}`);
+              }}>
               Comments: {commentCount}
             </Text>
             <div className="flex flex-row justify-between w-1/6">

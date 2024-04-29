@@ -21,7 +21,6 @@ export const Search = () => {
   }, 500);
 
   useEffect(() => {
-    console.log("data", data);
     if (data) {
       setSearchResults(data);
     }

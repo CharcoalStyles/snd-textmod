@@ -21,6 +21,9 @@ const config: Config = {
       body: [`var(--font-cuprum)`],
     },
     extend: {
+      transitionProperty: {
+        height: "height",
+      },
       colors: {
         text: {
           DEFAULT: "var(--text)",
@@ -41,7 +44,7 @@ const config: Config = {
         },
         white: "#fff",
         black: "#000",
-      }
+      },
     },
   },
   plugins: [],

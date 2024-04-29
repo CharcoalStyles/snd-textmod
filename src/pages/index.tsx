@@ -6,20 +6,7 @@ import { Text } from "@/components/ui";
 export default function Home() {
   return (
     <main className="h-screen pb-14 bg-right bg-cover w-screen">
-      <Header>
-        <a
-          className="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
-          href="#">
-          <Text
-            fontSize="4xl"
-            scale
-            fontType="heading"
-            tag="h1"
-            variant="primary">
-            Slice &amp; Dice TextMod DB
-          </Text>
-        </a>
-      </Header>
+      <Header />
       <div className="w-full">
         <div className="mx-auto w-full md:w-2/3 lg:w-1/2">
           <Search />
