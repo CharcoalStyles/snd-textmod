@@ -62,6 +62,7 @@ const UserModList = ({ userName }: { userName: string }) => {
       query={{
         orderBy: "newest",
         userName: userName,
+        limit: 20
       }}
     />
   );

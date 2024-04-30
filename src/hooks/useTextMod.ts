@@ -9,12 +9,13 @@ export const useTextMod = (id?: number) => {
     enabled: true,
     queryKey: ["singleMod", id],
     queryFn: async () => {
-      if (!id) 
-        return;
+      if (!id) return;
 
       let query = supabase
         .from("mods")
-        .select("*,mod_votes(*), mod_comments(*, user_id(id, username)), user_id(username)")
+        .select(
+          "*,mod_votes(*), mod_comments(*, user_id(id, username)), user_id(*)"
+        )
         .eq("id", id);
 
       const { data, error } = await query.single();
@@ -29,24 +30,28 @@ export const useTextMod = (id?: number) => {
         comments: data.mod_comments.map((c) => {
           return {
             //@ts-ignore
-            creator: c.user_id as { id: string; username: string},
+            creator: c.user_id as { id: string; username: string },
             createdDate: new Date(c.created_at),
             id: c.id,
             comment: c.comment ? c.comment : "",
           };
         }),
         createdDate: new Date(data.created_at),
-        //@ts-ignore
-        creatorName: data.user_id.username,
+        creator: {
+          //@ts-ignore
+          name: data.user_id.username,
+          //@ts-ignore
+          id: data.user_id.id,
+        },
         description: data.description,
         mod: data.mod,
         name: data.name,
-        votes: data.mod_votes
+        votes: data.mod_votes,
       };
 
       return fixedData;
     },
   });
 
-  return { data, error, isLoading, refetch};
+  return { data, error, isLoading, refetch };
 };

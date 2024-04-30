@@ -73,7 +73,6 @@ export default function TextModPage() {
   const user = useUser();
 
   const userVote = findUserVote(user !== null ? user : undefined, data?.votes);
-  console.log(userVote);
 
   return (
     <main className="h-screen min-h-screen w-screen contain-content">
@@ -99,14 +98,44 @@ export default function TextModPage() {
                   </Text>
                   <div className="-mt-3 md:-mt-5">
                     <Text fontSize="3xl" scale fontType="body">
-                      By {data.creatorName}
+                      By {data.creator.name}
                     </Text>
                   </div>
                 </div>
                 <div className="flex flex-col justify-between text-right mt-5">
-                  <Text scale fontType="body">
-                    Added: {data.createdDate.toDateString()}
-                  </Text>
+                  <div>
+                    <Text scale fontType="body">
+                      Added: {data.createdDate.toDateString()}
+                    </Text>
+                    <div>
+                      {user && user.id === data.creator.id && (
+                        <Text
+                          variant="danger"
+                          showHoverable
+                          onHover
+                          onClick={() => {
+                            supabase
+                              .from("mods")
+                              .delete()
+                              .eq("id", data.id)
+                              .then(({ error }) => {
+                                if (error) {
+                                  console.error(
+                                    "Error deleting comment:",
+                                    error
+                                  );
+                                } else {
+                                  router.push("/");
+                                }
+                              });
+                          }}
+                          fontSize="sm"
+                          fontType="body">
+                          Delete
+                        </Text>
+                      )}
+                    </div>
+                  </div>
                   <div className="flex flex-row justify-end gap-2">
                     <Text
                       fontSize="3xl"
