@@ -1,4 +1,5 @@
 import { Header, Loader, TextmodList } from "@/components";
+import { Footer } from "@/components/Footer";
 import { Text } from "@/components/ui";
 import { useTextmodsQuery } from "@/hooks/useTextmodsQuery";
 import { supabaseAtom } from "@/utils/supabase";
@@ -8,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function UserSlugPage() {
   const router = useRouter();
-  const slug = router.query.slug as string;
+  const slug = router.query.name as string;
   const [userName, setUserName] = useState<string>("");
   const [supabase] = useAtom(supabaseAtom);
 
@@ -30,22 +31,28 @@ export default function UserSlugPage() {
   }, [slug]);
 
   return (
-    <main className="h-screen pb-14 bg-right bg-cover w-screen">
+    <main className="h-screen min-h-screen w-screen contain-content">
       <Header />
 
-      <div className="mt-10 mx-4 flex flex-row gap-4 justify-center flex-wrap">
-        <div className="basis-72 max-w-96  flex-grow">
-          <div className="flex justify-center">
-            {userName === "" && <Loader size="2xl" color="secondary" />}
-            {userName !== "" && (
-              <Text fontSize="3xl" fontType="heading">
-                {userName.endsWith("s") ? userName + "'" : userName + "'s"} Mods
-              </Text>
-            )}
+      <div className="h-screen p-2 w-screen overflow-y-auto scrollbar scrollbar-thumb-primary">
+        <div className="mt-10 mx-4 flex flex-row gap-4 justify-center flex-wrap">
+          <div className="basis-72 max-w-96  flex-grow">
+            <div className="flex justify-center">
+              {userName === "" && <Loader size="2xl" color="secondary" />}
+              {userName !== "" && (
+                <Text fontSize="3xl" fontType="heading">
+                  {userName.endsWith("s") ? userName + "'" : userName + "'s"}{" "}
+                  Mods
+                </Text>
+              )}
+            </div>
+            {userName && <UserModList userName={userName} />}
           </div>
-          {userName && <UserModList userName={userName} />}
         </div>
+        <div className="h-40"></div>
       </div>
+
+      <Footer />
     </main>
   );
 }

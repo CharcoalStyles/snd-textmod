@@ -45,9 +45,13 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                 key={c.id}
                 className="basis-72 max-w-96 flex-grow flex flex-col border border-text p-2 my-2">
                 <div className="flex flex-row justify-between">
+                  <div>
+                  {c.comment.split("~n").map((l) => (
                   <Text fontSize="xl" fontType="body">
-                    {c.comment}
+                    {l}
                   </Text>
+                  ))}
+                  </div>
                   {user && user.id === c.creator.id && (
                     <Text
                       variant="danger"
@@ -97,7 +101,7 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                 supabase
                   .from("mod_comments")
                   .insert({
-                    comment,
+                    comment: comment.replace(/\n/g, "~n"),
                     mod_id: modId,
                     user_id: user.id,
                   })

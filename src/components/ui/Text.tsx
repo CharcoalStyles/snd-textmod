@@ -10,7 +10,6 @@ type TextProps = {
   showHoverable?: boolean;
   closeLines?: boolean;
   scale?:boolean;
-  strong?: boolean;
   "data-testid"?: string;
   onClick?: () => void;
 };
@@ -46,7 +45,6 @@ export const Text = ({
   variant,
   children,
   scale,
-  strong,
   onClick,
   "data-testid": dataTestId,
 }: PropsWithChildren<TextProps>) => {
@@ -104,7 +102,6 @@ export const Text = ({
         "hover:underline":  onHover,
         "hover:cursor-pointer": onHover,
         "leading-4": closeLines,
-        "font-bold": strong,
       },
     ]);
   }, [fontSize, fontType, variant, onHover]);

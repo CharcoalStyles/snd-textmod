@@ -10,7 +10,7 @@ export const Header = () => {
   const { user, isLoading } = useUser();
 
   return (
-    <>
+    <div className="sticky">
       <div className=" flex flex-row p-4 h-32 z-40">
         <div className="w-full flex items-center justify-between">
           <div className="flex-grow">
@@ -59,7 +59,7 @@ export const Header = () => {
           setShowAuth(false);
         }}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { Header, Loader } from "@/components";
 import { Comments } from "@/components/Comments";
+import { Footer } from "@/components/Footer";
 import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
@@ -75,68 +76,112 @@ export default function TextModPage() {
   console.log(userVote);
 
   return (
-    <main className="h-screen pb-14 bg-right bg-cover w-screen">
+    <main className="h-screen min-h-screen w-screen contain-content">
       <Header />
-      <div className="mt-10 px-4 mx-auto w-full md:w-2/3 flex flex-col">
-        {isLoading && (
-          <div className="w-full text-center">
-            <Loader size="2xl" color="secondary" />
-          </div>
-        )}
-        {error && <p>Error: {error.message}</p>}
-        {data && (
-          <>
-            <div className="flex flex-row justify-between">
-              <div>
-                <Text fontSize="4xl" scale variant="primary" fontType="heading">
-                  {data.name}
-                </Text>
-                <div className="-mt-3 md:-mt-5">
-                  <Text fontSize="3xl" scale fontType="body">
-                    By {data.creatorName}
-                  </Text>
-                </div>
-              </div>
-              <div className="flex flex-col justify-between text-right mt-5">
-                <Text scale fontType="body">
-                  Added: {data.createdDate.toDateString()}
-                </Text>
-                <div className="flex flex-row justify-end gap-2">
-                  <Text
-                    fontSize="3xl"
-                    variant="success"
-                    fontType="heading"
-                    onHover={user !== null}
-                    strong={(userVote?.upvote) ?? false}
-                    scale
-                    onClick={() => {
-                      user !== null && id && handleVoteClick(id, true, refetch, userVote);
-                    }}>
-                    ↑{data.votes.filter((v) => v.upvote).length}
-                  </Text>
-                  <Text
-                    fontSize="3xl"
-                    variant="danger"
-                    fontType="heading"
-                    onHover={user !== null}
-                    scale
-                    onClick={() => {
-                      user !== null &&id && handleVoteClick(id, false, refetch, userVote);
-                    }}>
-                    ↓{data.votes.filter((v) => !v.upvote).length}
-                  </Text>
-                </div>
-              </div>
+      <div className="h-screen p-2 w-screen overflow-y-auto scrollbar scrollbar-thumb-primary">
+        <div className="mt-10 px-4 mx-auto w-full md:w-2/3 flex flex-col">
+          {isLoading && (
+            <div className="w-full text-center">
+              <Loader size="2xl" color="secondary" />
             </div>
-            <hr className="my-2" />
-            <div className="flex flex-col md:flex-row text-center gap-4">
-              <div className="flex-grow text-left">
-                <Text fontSize="xl" fontType="body">
-                  {data.description}
-                </Text>
+          )}
+          {error && <p>Error: {error.message}</p>}
+          {data && (
+            <>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <Text
+                    fontSize="4xl"
+                    scale
+                    variant="primary"
+                    fontType="heading">
+                    {data.name}
+                  </Text>
+                  <div className="-mt-3 md:-mt-5">
+                    <Text fontSize="3xl" scale fontType="body">
+                      By {data.creatorName}
+                    </Text>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-between text-right mt-5">
+                  <Text scale fontType="body">
+                    Added: {data.createdDate.toDateString()}
+                  </Text>
+                  <div className="flex flex-row justify-end gap-2">
+                    <Text
+                      fontSize="3xl"
+                      variant="success"
+                      fontType="heading"
+                      onHover={user !== null}
+                      scale
+                      onClick={() => {
+                        user !== null &&
+                          id &&
+                          handleVoteClick(id, true, refetch, userVote);
+                      }}>
+                      ↑{data.votes.filter((v) => v.upvote).length}
+                    </Text>
+                    <Text
+                      fontSize="3xl"
+                      variant="danger"
+                      fontType="heading"
+                      onHover={user !== null}
+                      scale
+                      onClick={() => {
+                        user !== null &&
+                          id &&
+                          handleVoteClick(id, false, refetch, userVote);
+                      }}>
+                      ↓{data.votes.filter((v) => !v.upvote).length}
+                    </Text>
+                  </div>
+                </div>
               </div>
-              <div className="w-full md:flex-shrink md:w-fit">
-                <div className="flex flex-row gap-2 justify-end">
+              <hr className="my-2" />
+              <div className="flex flex-col md:flex-row text-center gap-4">
+                <div className="flex-grow text-left">
+                  <Text fontSize="xl" fontType="body">
+                    {data.description}
+                  </Text>
+                </div>
+                <div className="w-full md:flex-shrink md:w-fit">
+                  <div className="flex flex-row gap-2 justify-end">
+                    <Button
+                      variant="accent"
+                      label="Copy"
+                      onClick={() => {
+                        navigator.clipboard.writeText(data.mod!);
+                      }}
+                    />
+                    <Button
+                      variant="secondary"
+                      label={showTextMod ? "Hide" : "Show"}
+                      onClick={() => {
+                        setShowTextMod(!showTextMod);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <hr className="my-2" />
+
+              {id && (
+                <Comments
+                  modId={id}
+                  comments={data.comments}
+                  onUpdate={() => {
+                    refetch();
+                  }}
+                />
+              )}
+
+              <Modal
+                isOpen={showTextMod}
+                onClose={() => {
+                  setShowTextMod(false);
+                }}>
+                <div className="break-all flex flex-col gap-4">
+                  <Text fontType="body">{data.mod}</Text>
                   <Button
                     variant="accent"
                     label="Copy"
@@ -145,53 +190,22 @@ export default function TextModPage() {
                     }}
                   />
                   <Button
-                    variant="secondary"
-                    label={showTextMod ? "Hide" : "Show"}
+                    variant="black"
+                    label="Close"
                     onClick={() => {
-                      setShowTextMod(!showTextMod);
+                      setShowTextMod(false);
                     }}
                   />
                 </div>
-              </div>
-            </div>
-            <hr className="my-2" />
+              </Modal>
+            </>
+          )}
+        </div>
 
-            {id && (
-              <Comments
-                modId={id}
-                comments={data.comments}
-                onUpdate={() => {
-                  refetch();
-                }}
-              />
-            )}
-
-            <Modal
-              isOpen={showTextMod}
-              onClose={() => {
-                setShowTextMod(false);
-              }}>
-              <div className="break-all flex flex-col gap-4">
-                <Text fontType="body">{data.mod}</Text>
-                <Button
-                  variant="accent"
-                  label="Copy"
-                  onClick={() => {
-                    navigator.clipboard.writeText(data.mod!);
-                  }}
-                />
-                <Button
-                  variant="black"
-                  label="Close"
-                  onClick={() => {
-                    setShowTextMod(false);
-                  }}
-                />
-              </div>
-            </Modal>
-          </>
-        )}
+        <div className="h-40"></div>
       </div>
+
+      <Footer />
     </main>
   );
 }
