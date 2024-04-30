@@ -1,6 +1,7 @@
 import { Header, Loader } from "@/components";
 import { Comments } from "@/components/Comments";
 import { Footer } from "@/components/Footer";
+import { ModModal } from "@/components/ModModal";
 import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
@@ -70,6 +71,7 @@ export default function TextModPage() {
     : undefined;
   const { data, error, isLoading, refetch } = useTextMod(id);
   const [showTextMod, setShowTextMod] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const user = useUser();
 
   const userVote = findUserVote(user !== null ? user : undefined, data?.votes);
@@ -107,32 +109,44 @@ export default function TextModPage() {
                     <Text scale fontType="body">
                       Added: {data.createdDate.toDateString()}
                     </Text>
-                    <div>
+                    <div className="flex flex-row justify-between">
                       {user && user.id === data.creator.id && (
-                        <Text
-                          variant="danger"
-                          showHoverable
-                          onHover
-                          onClick={() => {
-                            supabase
-                              .from("mods")
-                              .delete()
-                              .eq("id", data.id)
-                              .then(({ error }) => {
-                                if (error) {
-                                  console.error(
-                                    "Error deleting comment:",
-                                    error
-                                  );
-                                } else {
-                                  router.push("/");
-                                }
-                              });
-                          }}
-                          fontSize="sm"
-                          fontType="body">
-                          Delete
-                        </Text>
+                        <>
+                          <Text
+                            variant="accent"
+                            showHoverable
+                            onHover
+                            onClick={() => {
+                              setShowEditModal(true);
+                            }}
+                            fontType="body">
+                            Edit
+                          </Text>
+
+                          <Text
+                            variant="danger"
+                            showHoverable
+                            onHover
+                            onClick={() => {
+                              supabase
+                                .from("mods")
+                                .delete()
+                                .eq("id", data.id)
+                                .then(({ error }) => {
+                                  if (error) {
+                                    console.error(
+                                      "Error deleting comment:",
+                                      error
+                                    );
+                                  } else {
+                                    router.push("/");
+                                  }
+                                });
+                            }}
+                            fontType="body">
+                            Delete
+                          </Text>
+                        </>
                       )}
                     </div>
                   </div>
@@ -203,7 +217,24 @@ export default function TextModPage() {
                   }}
                 />
               )}
-
+              <ModModal
+                description="Edit your TextMod. Name and TextMod are required fields. Description is highly recommended."
+                title="Edit TextMod"
+                preFill={{
+                  id: data.id,
+                  name: data.name ? data.name : "",
+                  description: data.description ? data.description : "",
+                  mod: data.mod ? data.mod : "",
+                }}
+                isOpen={showEditModal}
+                onClose={() => {
+                  setShowEditModal(false);
+                }}
+                onSubmit={() => {
+                  refetch();
+                  setShowEditModal(false);
+                }}
+              />
               <Modal
                 isOpen={showTextMod}
                 onClose={() => {

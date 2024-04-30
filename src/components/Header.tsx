@@ -2,12 +2,13 @@ import { Button, Text } from "@/components/ui";
 import { SbAuth, UserBadge } from "@/components";
 import React, { useState } from "react";
 import { useUser } from "@/hooks/useUser";
-import { AddNewMod } from "./AddNewMod";
+import { ModModal } from "./ModModal";
 import Link from "next/link";
 
 export const Header = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { user, isLoading } = useUser();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="sticky">
@@ -30,14 +31,17 @@ export const Header = () => {
           {!isLoading && (
             <div className="flex justify-end content-center flex-shrink">
               {user ? (
-                (() => {
-                  return (
-                    <div className="ml-2 flex flex-row gap-4">
-                      <AddNewMod />
-                      <UserBadge />
-                    </div>
-                  );
-                })()
+                <div className="ml-2 flex flex-row gap-4">
+                  <Button
+                    variant="secondary"
+                    size="medium"
+                    label="Add new TextMod"
+                    onClick={() => {
+                      setIsModalOpen(true);
+                    }}
+                  />
+                  <UserBadge />
+                </div>
               ) : (
                 <Button
                   variant="primary"
@@ -53,6 +57,13 @@ export const Header = () => {
           )}
         </div>
       </div>
+
+      <ModModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        description="Add a new textmod to the database. Name and TextMod are required fields. Description is highly recommended."
+        title="Add new TextMod"
+      />
       <SbAuth
         isOpen={showAuth}
         onClose={() => {
