@@ -34,5 +34,15 @@ export const Footer = () => (
       }}>
       Feedback
     </Text>
+    |
+    <Text
+      variant="black"
+      onHover
+      showHoverable
+      onClick={() => {
+        window.open("https://github.com/CharcoalStyles/snd-textmod", "_blank");
+      }}>
+      GitHub
+    </Text>
   </footer>
 );

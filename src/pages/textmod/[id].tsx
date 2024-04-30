@@ -181,7 +181,7 @@ export default function TextModPage() {
                   setShowTextMod(false);
                 }}>
                 <div className="break-all flex flex-col gap-4">
-                  <div className="max-h-96 w-full scrollbar scrollbar-thumb-secondary">
+                  <div className="max-h-96 w-full overflow-y-auto scrollbar scrollbar-thumb-secondary">
                     <Text fontType="body">{data.mod}</Text>
                   </div>
                   <Button
