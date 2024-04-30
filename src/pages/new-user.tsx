@@ -149,7 +149,7 @@ const NewUserForm = ({ onSubmit, error }: NewUserFormProps) => {
             <Text fontSize="xl"> - Share your textmods</Text>
           </li>
           <li>
-            <Text fontSize="xl"> - Vote on other's textmods</Text>
+            <Text fontSize="xl"> - Vote on other&apos;s textmods</Text>
           </li>
           <li>
             <Text fontSize="xl"> - Comment on textmods</Text>

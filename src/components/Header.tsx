@@ -3,6 +3,7 @@ import { SbAuth, UserBadge } from "@/components";
 import React, { PropsWithChildren, useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import { AddNewMod } from "./AddNewMod";
+import Link from "next/link";
 
 export const Header = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -10,10 +11,10 @@ export const Header = () => {
 
   return (
     <>
-      <div className="flex flex-row p-4">
+      <div className=" flex flex-row p-4 h-32 z-40">
         <div className="w-full flex items-center justify-between">
           <div className="flex-grow">
-            <a
+            <Link
               className="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
               href="/">
               <Text
@@ -24,7 +25,7 @@ export const Header = () => {
                 variant="primary">
                 Slice &amp; Dice TextMod DB
               </Text>
-            </a>
+            </Link>
           </div>
           {!isLoading && (
             <div className="flex justify-end content-center flex-shrink">

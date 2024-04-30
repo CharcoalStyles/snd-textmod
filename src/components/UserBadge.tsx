@@ -1,4 +1,4 @@
-import { Button } from "./ui/Button";
+import { Button, Text } from "./ui";
 import { useEffect, useRef, useState } from "react";
 // import { getSupabase } from "@/utils/supabase";
 import clsx from "clsx";
@@ -11,7 +11,7 @@ import { Loader } from "./Loader";
 export const UserBadge = () => {
   const [supabase] = useAtom(supabaseAtom);
   const [menuOpen, setMenuOpen] = useState(false);
-  const {userData, user, isLoading, refetch, clear } = useUser();
+  const { userData, user, isLoading, refetch, clear } = useUser();
   const [loading, setLoading] = useState(true);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -24,13 +24,13 @@ export const UserBadge = () => {
       clearTimeout(timeoutRef.current);
     }
 
-    if (isLoading || ! userData || userData.length === 0) {
+    if (isLoading || !userData || userData.length === 0) {
       timeoutRef.current = setTimeout(() => {
         refetch();
       }, 500);
       return;
     }
-    
+
     if (userData) {
       setLoading(false);
       setLabel(`${userData[0].username}`);
@@ -44,7 +44,7 @@ export const UserBadge = () => {
   }, [userData, isLoading]);
 
   if (loading) {
-    return <Loader color="primary" size="sm" />
+    return <Loader color="primary" size="sm" />;
   }
 
   return (
@@ -61,7 +61,7 @@ export const UserBadge = () => {
         />
         <div
           className={clsx(
-            "dropdown-menu absolute h-auto border border-slate-600 bg-black w-full p-2",
+            "dropdown-menu text-center absolute h-auto border border-slate-600 bg-black w-full p-2",
             menuOpen ? "block" : "hidden"
           )}>
           <Button
@@ -73,6 +73,10 @@ export const UserBadge = () => {
               supabase.auth.signOut();
             }}
           />
+          <hr />
+          <div className="mt-2">
+            <Text fontSize="sm">v. 1.0</Text>
+          </div>
         </div>
       </div>
     </div>

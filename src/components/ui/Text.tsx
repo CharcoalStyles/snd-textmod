@@ -5,11 +5,12 @@ type TextProps = {
   tag?: "span" | "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   fontSize?: "sm" | "base" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   fontType?: "heading" | "body";
-  variant?: "base" | "primary" | "secondary" | "accent" | "success" | "danger";
+  variant?: "base" | "primary" | "secondary" | "accent" | "success" | "danger" | "black";
   onHover?: boolean;
   showHoverable?: boolean;
   closeLines?: boolean;
   scale?:boolean;
+  strong?: boolean;
   "data-testid"?: string;
   onClick?: () => void;
 };
@@ -45,6 +46,7 @@ export const Text = ({
   variant,
   children,
   scale,
+  strong,
   onClick,
   "data-testid": dataTestId,
 }: PropsWithChildren<TextProps>) => {
@@ -65,6 +67,8 @@ export const Text = ({
           return `text-green-500 ${onHover ? "hover:text-green-600" : ""}`;
         case "danger":
           return `text-red-500 ${onHover ? "hover:text-red-600" : ""}`;
+        case "black":
+          return `text-black ${onHover ? "hover:text-slate-700" : ""}`;
         default:
           return `text-text ${onHover ? "hover:text-slate-400" : ""}`;
       }
@@ -100,6 +104,7 @@ export const Text = ({
         "hover:underline":  onHover,
         "hover:cursor-pointer": onHover,
         "leading-4": closeLines,
+        "font-bold": strong,
       },
     ]);
   }, [fontSize, fontType, variant, onHover]);

@@ -72,6 +72,7 @@ export default function TextModPage() {
   const user = useUser();
 
   const userVote = findUserVote(user !== null ? user : undefined, data?.votes);
+  console.log(userVote);
 
   return (
     <main className="h-screen pb-14 bg-right bg-cover w-screen">
@@ -106,6 +107,7 @@ export default function TextModPage() {
                     variant="success"
                     fontType="heading"
                     onHover={user !== null}
+                    strong={(userVote?.upvote) ?? false}
                     scale
                     onClick={() => {
                       user !== null && id && handleVoteClick(id, true, refetch, userVote);

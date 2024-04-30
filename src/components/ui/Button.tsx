@@ -80,10 +80,10 @@ const statusClasses: Record<
   //TODO: add actual black and white variants
   black: {
     bgColour: "bg-transparent",
-    bgHoverColour: "hover:bg-gray-400",
-    bgActiveColour: "bg-gray-400",
+    bgHoverColour: "hover:bg-gray-700",
+    bgActiveColour: "bg-black",
     bgActiveHoverColour: "hover:bg-transparent",
-    borderColour: "border-gray-400",
+    borderColour: "border-black",
   },
   white: {
     bgColour: "bg-transparent",
