@@ -14,33 +14,8 @@ type UseTextmodsQueryProps = {
 export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
   const { limit = 10, orderBy = "newest", userName, lastDate } = props;
   const [supabase] = useAtom(supabaseAtom);
-  const queryClient = useQueryClient();
-
-  const { data: userData, error: userError } = useQuery({
-    enabled: true,
-    queryKey: ["user", userName],
-    queryFn: async () => {
-      if (!userName)
-        return {
-          id: "",
-        };
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id")
-        .ilike("username", userName)
-        .single();
-
-      if (error) {
-        console.error("Error fetching records:", error);
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  const queryKey =  [
+  
+  const queryKey = [
     "modQuery",
     ...Object.entries(props).map((e) => {
       return [e[0], e[1] === undefined ? "" : e[1]];
@@ -55,8 +30,19 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
         .from("mods")
         .select("*,mod_votes(*), mod_comments(count), user_id(username)");
 
-      if (userData && userData?.id !== "") {
-        query = query.eq("user_id", userData.id);
+      if (userName) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id")
+          .ilike("username", userName)
+          .single();
+
+        if (error || !data) {
+          console.error("Error fetching records:", error);
+          throw error;
+        }
+
+        query = query.eq("user_id", data.id);
       }
 
       if (lastDate) {

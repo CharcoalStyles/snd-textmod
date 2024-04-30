@@ -18,7 +18,6 @@ export const useUser = () => {
     enabled: true,
     queryKey: ["userData", currentUser?.id ?? ""],
     queryFn: async () => {
-      console.log("UseUSer - useQuery", "Start", { currentUser, userData });
       if (userData && userData.length > 0) {
         return userData;
       }
