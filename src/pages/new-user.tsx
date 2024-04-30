@@ -12,7 +12,7 @@ const NewUserPage: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [supabase] = useAtom(supabaseAtom);
-  const { user, userData, isLoading, error, refetch } = useUser();
+  const { user, userData, isLoading, error } = useUser();
   const [ucOne, setUcOne] = useState(true);
   const [submitError, setSubmitError] = useState<string>();
 
@@ -31,13 +31,16 @@ const NewUserPage: React.FC = () => {
         setUcOne(false);
         return;
       }
+
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
 
       setLoading(true);
       timeoutRef.current = setTimeout(() => {
-        if (user === null || (userData !== null && userData.length > 0)) {
+
+        if (user === null || (userData !== undefined && userData.length > 0)) {
+
           router.push("/");
         } else {
           setLoading(false);
@@ -46,7 +49,7 @@ const NewUserPage: React.FC = () => {
     }
   }, [isLoading, user, userData]);
 
-  if (loading || !user || userData === null || userData.length > 0) {
+  if (loading || !user || userData === undefined || userData.length > 0) {
     return (
       <div
         data-testid="loader"

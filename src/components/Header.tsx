@@ -1,6 +1,6 @@
 import { Button, Text } from "@/components/ui";
 import { SbAuth, UserBadge } from "@/components";
-import React, { PropsWithChildren, useState } from "react";
+import React, { useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import { AddNewMod } from "./AddNewMod";
 import Link from "next/link";
