@@ -179,7 +179,7 @@ const NewUserForm = ({ onSubmit, error }: NewUserFormProps) => {
           <input
             type="text"
             id="usernameInput"
-            placeholder="Tann"
+            placeholder="tann"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="border border-gray-300 rounded-md px-4 py-2 mb-2"
