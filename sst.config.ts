@@ -10,8 +10,6 @@ export default $config({
     };
   },
   async run() {
-    new sst.aws.Nextjs("SndTextmodSite", {
-      domain: $app.stage === 'production' ? "snd-textmod.charcoalstyles.com" : undefined,
-    });
+    new sst.aws.Nextjs("SndTextmodSite");
   },
 });

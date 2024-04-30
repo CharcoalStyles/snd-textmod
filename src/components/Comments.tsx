@@ -47,7 +47,7 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                 <div className="flex flex-row justify-between">
                   <div>
                   {c.comment.split("~n").map((l) => (
-                  <Text fontSize="xl" fontType="body">
+                  <Text key={l} fontSize="xl" fontType="body">
                     {l}
                   </Text>
                   ))}
