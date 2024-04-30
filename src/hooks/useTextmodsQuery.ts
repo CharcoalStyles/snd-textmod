@@ -18,12 +18,7 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
 
   const { data: userData, error: userError } = useQuery({
     enabled: true,
-    queryKey: [
-      "modQuery",
-      ...Object.entries(props).map((e) => {
-        return [e[0], e[1] === undefined ? "" : e[1]];
-      }),
-    ],
+    queryKey: ["user", userName],
     queryFn: async () => {
       if (!userName)
         return {
@@ -45,9 +40,16 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
     },
   });
 
+  const queryKey =  [
+    "modQuery",
+    ...Object.entries(props).map((e) => {
+      return [e[0], e[1] === undefined ? "" : e[1]];
+    }),
+  ];
+
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,
-    queryKey: ["mods"],
+    queryKey,
     queryFn: async () => {
       let query = supabase
         .from("mods")

@@ -75,7 +75,7 @@ export const UserBadge = () => {
           />
           <hr />
           <div className="mt-2">
-            <Text fontSize="sm">v. 1.0.1</Text>
+            <Text fontSize="sm">v. 1.0.2</Text>
           </div>
         </div>
       </div>
