@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -37,17 +38,16 @@ export const TextmodCard = ({
         <div>
           <div className="flex flex-row">
             <div className="flex-grow">
-              <Text
-                onHover
-                showHoverable
-                onClick={() => {
-                  router.push(`/textmod/${id}`);
-                }}
-                fontSize="2xl"
-                fontType="heading"
-                variant="accent">
-                {name}
-              </Text>
+              <Link href={`/textmod/${id}`}>
+                <Text
+                  onHover
+                  showHoverable
+                  fontSize="2xl"
+                  fontType="heading"
+                  variant="accent">
+                  {name}
+                </Text>
+              </Link>
             </div>
             <div>
               <Text
@@ -71,32 +71,22 @@ export const TextmodCard = ({
       </div>
       <div className="flex flex-col p-2">
         <div className="flex flex-row justify-between">
-          <Text
-            tag="span"
-            fontType="body"
-            showHoverable
-            onHover
-            onClick={() => {
-              router.push(`/user/${creator.slug}`);
-            }}>
-            {creator.name}
-          </Text>
+          <Link href={`/user/${creator.slug}`}>
+            <Text tag="span" fontType="body" showHoverable onHover>
+              {creator.name}
+            </Text>
+          </Link>
           <Text tag="span" fontType="body">
             {createdDate.toDateString()}
           </Text>
         </div>
         <div className="flex flex-col">
           <div className="flex justify-between flex-row">
-            <Text
-              fontSize="base"
-              fontType="body"
-              onHover
-              showHoverable
-              onClick={() => {
-                router.push(`/textmod/${id}`);
-              }}>
-              Comments: {commentCount}
-            </Text>
+            <Link href={`/textmod/${id}`}>
+              <Text fontSize="base" fontType="body" onHover showHoverable>
+                Comments: {commentCount}
+              </Text>
+            </Link>
             <div className="flex flex-row justify-between w-1/6">
               <Text fontSize="xl" variant="success" fontType="heading">
                 ↑{upvotes}

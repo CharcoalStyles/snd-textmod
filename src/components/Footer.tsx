@@ -1,48 +1,30 @@
 import { Text } from "@/components/ui";
+import Link from "next/link";
 
 export const Footer = () => (
   <footer className="fixed w-screen h-min-6 px-8 bg-secondary z-50 bottom-0 flex flex-row gap-2 justify-center">
-    <Text
-      variant="black"
-      onHover
-      showHoverable
-      onClick={() => {
-        window.open("https://www.charcoalstyles.com", "_blank");
-      }}>
-      charcoalstyles.com
-    </Text>
+    <Link href="https://www.charcoalstyles.com">
+      <Text variant="black" onHover showHoverable>
+        charcoalstyles.com
+      </Text>
+    </Link>
     |
-    <Text
-      variant="black"
-      onHover
-      showHoverable
-      onClick={() => {
-        window.open("https://ko-fi.com/charcoalstyles", "_blank");
-      }}>
-      Ko-Fi
-    </Text>
+    <Link href="https://ko-fi.com/charcoalstyles">
+      <Text variant="black" onHover showHoverable>
+        Ko-Fi
+      </Text>
+    </Link>
     |
-    <Text
-      variant="black"
-      onHover
-      showHoverable
-      onClick={() => {
-        window.open(
-          "mailto:aaron@charcoalstyles.com?subject=SnD TextMod DB Feedback",
-          "_blank"
-        );
-      }}>
-      Feedback
-    </Text>
+    <Link href="mailto:aaron@charcoalstyles.com?subject=SnD TextMod DB Feedback">
+      <Text variant="black" onHover showHoverable>
+        Feedback
+      </Text>
+    </Link>
     |
-    <Text
-      variant="black"
-      onHover
-      showHoverable
-      onClick={() => {
-        window.open("https://github.com/CharcoalStyles/snd-textmod", "_blank");
-      }}>
-      GitHub
-    </Text>
+    <Link href="https://github.com/CharcoalStyles/snd-textmod">
+      <Text variant="black" onHover showHoverable>
+        GitHub
+      </Text>
+    </Link>
   </footer>
 );
