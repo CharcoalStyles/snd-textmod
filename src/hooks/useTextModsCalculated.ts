@@ -18,7 +18,7 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
         .from(table)
         .select(
           "*, mods(*, mod_votes(*), mod_comments(count), user_id(username))"
-        );
+        ).limit(10);
 
       if (error) {
         console.error("Error fetching records:", error);
