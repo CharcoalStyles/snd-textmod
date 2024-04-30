@@ -11,18 +11,19 @@ type UseTextmodsQueryProps = {
   lastDate?: Date;
 };
 
-export const useTextmodsQuery = ({
-  limit = 10,
-  orderBy = "newest",
-  userName,
-  lastDate,
-}: UseTextmodsQueryProps) => {
+export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
+  const { limit = 10, orderBy = "newest", userName, lastDate } = props;
   const [supabase] = useAtom(supabaseAtom);
   const queryClient = useQueryClient();
 
   const { data: userData, error: userError } = useQuery({
     enabled: true,
-    queryKey: ["userData", "tms"],
+    queryKey: [
+      "modQuery",
+      ...Object.entries(props).map((e) => {
+        return [e[0], e[1] === undefined ? "" : e[1]];
+      }),
+    ],
     queryFn: async () => {
       if (!userName)
         return {
