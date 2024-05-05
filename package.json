@@ -7,9 +7,11 @@
     "dev": "sst dev next dev",
     "lint": "next lint",
     "start": "next start",
-    "supabase:schema": "supabase gen types typescript --project-id 'rvkphcsliqyyrsozvbmk' --schema public \u003e src/utils/schema.ts"
+    "supabase:schema": "supabase gen types typescript --project-id 'rvkphcsliqyyrsozvbmk' --schema public > src/utils/schema.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.569.0",
+    "@aws-sdk/s3-request-presigner": "^3.569.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",

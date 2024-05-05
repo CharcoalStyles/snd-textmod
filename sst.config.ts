@@ -6,10 +6,15 @@ export default $config({
       name: "snd-textmod",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
-
     };
   },
   async run() {
-    new sst.aws.Nextjs("SndTextmodSite");
+    const bucket = new sst.aws.Bucket("MyBucket", {
+      public: true,
+    });
+
+    new sst.aws.Nextjs("SndTextmodSite", {
+      link: [bucket],
+    });
   },
 });
