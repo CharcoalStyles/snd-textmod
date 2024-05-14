@@ -207,6 +207,16 @@ export default function TextModPage() {
                 </div>
               </div>
               <hr className="my-2" />
+              {
+                data.mainImage && (
+                  <div className="flex flex-row justify-center">
+                    <img
+                      src={data.mainImage}
+                      alt="main image"
+                      className="rounded-lg object-scale-down max-h-96 max-w-full"
+                    />
+                  </div>
+                )}
 
               {id && (
                 <Comments
@@ -225,6 +235,7 @@ export default function TextModPage() {
                   name: data.name ? data.name : "",
                   description: data.description ? data.description : "",
                   mod: data.mod ? data.mod : "",
+                  mainImageUrl: data.mainImage ? data.mainImage : undefined,
                 }}
                 isOpen={showEditModal}
                 onClose={() => {

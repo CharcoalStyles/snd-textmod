@@ -9,12 +9,7 @@ export default $config({
     };
   },
   async run() {
-    const bucket = new sst.aws.Bucket("MyBucket", {
-      public: true,
-    });
 
-    new sst.aws.Nextjs("SndTextmodSite", {
-      link: [bucket],
-    });
+    new sst.aws.Nextjs("SndTextmodSite");
   },
 });

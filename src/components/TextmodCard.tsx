@@ -64,9 +64,11 @@ export const TextmodCard = ({
               </Text>
             </div>
           </div>
-          <Text fontSize="xl" fontType="body">
-            {description}
-          </Text>
+          <div className="break-words">
+            <Text fontSize="xl" fontType="body">
+              {description}
+            </Text>
+          </div>
         </div>
       </div>
       <div className="flex flex-col p-2">

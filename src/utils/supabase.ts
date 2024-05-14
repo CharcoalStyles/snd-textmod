@@ -14,7 +14,8 @@ if (!supabaseKey) {
     throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY");
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey)
+
 
 const coreSupabaseAtom = atom(supabase);
 export const supabaseAtom = atom((get) => get(coreSupabaseAtom));

@@ -27,6 +27,7 @@ export const useTextMod = (id?: number) => {
 
       const fixedData = {
         id: data.id,
+        mainImage: data.main_image,
         comments: data.mod_comments.map((c) => {
           return {
             //@ts-ignore

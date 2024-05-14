@@ -1,24 +1,27 @@
 import { Button, Input, Text, TextArea } from "./ui";
-import { useState } from "react";
-import { Resource } from "sst";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { useEffect, useState } from "react";
 import FileInput from "./ui/FileInput";
+import { useAtom } from "jotai";
+import { supabaseAtom } from "@/utils/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
 
-export type TextmodData = {
+export type TextmodFormData = {
   id?: number;
   description: string;
   mod: string;
   name: string;
+  mainImage?: File;
   mainImageUrl?: string;
-  secondaryImagesUrl?: string[];
+  secondaryImages?: File[];
+  secondaryImageUrls?: string[];
 };
 
 type ModFormProps = {
-  preFill?: TextmodData;
-  onSubmit: (data: TextmodData) => void;
+  preFill?: TextmodFormData;
+  onSubmit: (data: TextmodFormData) => void;
   onCancel: () => void;
   disabled?: boolean;
+  outerError?: string;
 };
 
 export const ModForm = ({
@@ -26,19 +29,25 @@ export const ModForm = ({
   onCancel,
   onSubmit,
   preFill,
-}: ModFormProps) => {
-  const [formData, setFormData] = useState<TextmodData>(
+  outerError
+}: ModFormProps) => {  
+  const [formData, setFormData] = useState<TextmodFormData>(
     preFill || {
       name: "",
       description: "",
       mod: "",
-      mainImageUrl: "",
-      secondaryImagesUrl: [],
+      mainImage: undefined,
+      secondaryImages: [],
     }
   );
   const [error, setError] = useState<string | null>(null);
-  const [mainImage, setMainImage] = useState<File>();
   const maxNameLength = 100;
+
+  useEffect(() => {
+    if (outerError) {
+      setError(outerError);
+    }
+  }, [outerError]);
 
   return (
     <div>
@@ -49,31 +58,6 @@ export const ModForm = ({
 
           if (formData.name.length > maxNameLength) {
             return;
-          }
-
-          if (mainImage) {
-            const command = new PutObjectCommand({
-              Key: crypto.randomUUID(),
-              Bucket: Resource.MyBucket.name,
-            });
-            const url = await getSignedUrl(new S3Client(), command);
-            setFormData((prev) => ({ ...prev, mainImageUrl: url }));
-
-            const res = await fetch(url, {
-              method: "PUT",
-              body: mainImage,
-              headers: {
-                "Content-Type": mainImage.type,
-                "Content-Disposition": `attachment; filename="${mainImage.name}"`,
-              },
-            });
-            if (!res.ok) {
-              throw new Error("Failed to upload image");
-            }
-            else {
-              console.log("Uploaded image");
-              formData.mainImageUrl = url;
-            }
           }
 
           onSubmit(formData);
@@ -105,21 +89,63 @@ export const ModForm = ({
                 setFormData((prev) => ({ ...prev, mod: v }));
               }}
             />
+            {formData.mainImageUrl && (
+               <div className="flex flex-row justify-center">
+               <img
+                 src={formData.mainImageUrl}
+                 alt="main image"
+                 width={150}
+                 height={150}
+                 className="rounded-lg"
+               />
+               <div>
+                 <Button
+                   variant="danger"
+                   label="Remove"
+                   onClick={() => {
+                     setFormData((prev) => ({
+                       ...prev,
+                       mainImage: undefined,
+                       mainImageUrl: undefined,
+                     }));
+                   }}
+                   />
+               </div>
+             </div>
+            )}
+            {formData.mainImage && (
+               <div className="flex flex-row justify-center">
+               <img
+                 src={URL.createObjectURL(formData.mainImage)}
+                 alt="main image"
+                 width={150}
+                 height={150}
+                 className="rounded-lg"
+               />
+               <div>
+                 <Button
+                   variant="danger"
+                   label="Remove"
+                   onClick={() => {
+                     setFormData((prev) => ({
+                       ...prev,
+                       mainImage: undefined,
+                       mainImageUrl: undefined,
+                     }));
+                   }}
+                   />
+               </div>
+             </div>
+            )}
+            {!formData.mainImage && !formData.mainImageUrl && (
             <FileInput
               label="Main Image"
               accept="image/png, image/jpeg"
               onChange={(e) => {
-                const x = e.target.files?.[0];
-                //  fetch("url", {
-                //   body:  e.target.files?.[0],
-                //   method: "PUT",
-                //   headers: {
-                //     "Content-Type":  e.target.files?.[0].type,
-                //     "Content-Disposition": `attachment; filename="${ e.target.files?.[0].name}"`,
-                //   },
-                // });
+                setFormData((prev) => ({ ...prev, mainImage: e.target.files?.[0] }));
               }}
             />
+            )}
           </div>
         </div>
         <div className="flex flex-row gap-2">

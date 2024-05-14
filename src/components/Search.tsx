@@ -5,6 +5,7 @@ import { Text } from "@/components/ui";
 import { useTextmodSearch } from "@/hooks/useTextmodSearch";
 import { Database } from "@/utils/schema";
 import clsx from "clsx";
+import Link from "next/link";
 
 export const Search = () => {
   const [search, setSearch] = useState("");
@@ -51,7 +52,9 @@ export const Search = () => {
             {searchResults.map((result) => {
               return (
                 <div key={result.id}>
+                <Link href={`/textmod/${result.id}`}>
                   <Text>{result.name}</Text>
+                  </Link>
                 </div>
               );
             })}
