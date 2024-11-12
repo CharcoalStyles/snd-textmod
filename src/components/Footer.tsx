@@ -15,7 +15,7 @@ export const Footer = () => (
       </Text>
     </Link>
     |
-    <Link href="mailto:aaron@charcoalstyles.com?subject=SnD TextMod DB Feedback">
+    <Link href="https://formbricks.charcoalstyles.com/s/cm3e2fg9g000c8n9e1omsasnv">
       <Text variant="black" onHover showHoverable>
         Feedback
       </Text>
