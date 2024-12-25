@@ -9,7 +9,8 @@ export default $config({
     };
   },
   async run() {
-
-    new sst.aws.Nextjs("SndTextmodSite");
+    new sst.aws.Nextjs("SndTextmodSite", {
+      invalidation: false,
+    });
   },
 });

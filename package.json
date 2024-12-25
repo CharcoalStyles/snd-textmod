@@ -22,7 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-modal": "^3.16.1",
-    "sst": "ion",
+    "sst": "^3.4.30",
     "use-debounce": "^10.0.0"
   },
   "devDependencies": {
