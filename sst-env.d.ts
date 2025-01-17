@@ -6,6 +6,10 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
+    "DbCache": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "SndTextmodSite": {
       "type": "sst.aws.Nextjs"
       "url": string

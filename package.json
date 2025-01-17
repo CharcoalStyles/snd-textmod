@@ -10,19 +10,23 @@
     "supabase:schema": "supabase gen types typescript --project-id 'rvkphcsliqyyrsozvbmk' --schema public > src/utils/schema.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.724.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.42.5",
     "@tanstack/react-query": "^5.32.0",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.7.9",
+    "brotli-unicode": "^1.0.2",
     "clsx": "^2.1.1",
     "jotai": "^2.8.0",
+    "lzw-compressor": "^21.6.5",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
     "react-modal": "^3.16.1",
-    "sst": "^3.4.30",
+    "sst": "3.5.0",
     "use-debounce": "^10.0.0"
   },
   "devDependencies": {

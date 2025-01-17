@@ -4,12 +4,14 @@ import { supabaseAtom } from "@/utils/supabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
-type UseTextmodsQueryProps = {
+export type TextmodsQuery = {
   userName?: string;
   orderBy?: "newest" | "oldest" | "top";
   limit?: number;
   lastDate?: Date;
 };
+
+type UseTextmodsQueryProps = TextmodsQuery;
 
 export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
   const { limit = 10, orderBy = "newest", userName, lastDate } = props;
@@ -21,6 +23,10 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
       return [e[0], e[1] === undefined ? "" : e[1]];
     }),
   ];
+
+  const [_, ...q] = queryKey
+  const stringQuery = q.map((o) => `${o[0]}=${o[1]}`).join("&");
+  console.log("key", stringQuery);
 
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,

@@ -9,8 +9,20 @@ export default $config({
     };
   },
   async run() {
+    const dbCache = new sst.aws.Dynamo("DbCache", {
+      fields: {
+        dbTable: "string",
+        dbQuery: "string",
+        // data: "string",
+        // ttl: "number",
+      },
+      primaryIndex: { hashKey: "dbTable", rangeKey: "dbQuery" },
+      ttl: "ttl",
+    });
+
     new sst.aws.Nextjs("SndTextmodSite", {
       invalidation: false,
+      link: [dbCache],
     });
   },
 });

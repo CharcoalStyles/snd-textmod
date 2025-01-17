@@ -2,8 +2,6 @@ import { Header } from "@/components";
 import { Search } from "@/components/Search";
 import { TextmodList } from "@/components";
 import { Button, Text } from "@/components/ui";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
