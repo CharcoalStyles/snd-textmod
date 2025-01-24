@@ -20,11 +20,7 @@ export default function Home() {
                   Latest
                 </Text>
               </div>
-              <TextmodList
-                query={{
-                  orderBy: "newest",
-                }}
-              />
+              <TextmodList cacheUrl="mods/latest" />
             </div>
 
             <div className="basis-72 max-w-96 flex-grow">
@@ -33,7 +29,7 @@ export default function Home() {
                   Highest Rated (All)
                 </Text>
               </div>
-              <TextmodList table="mods_rated_alltime" />
+              <TextmodList cacheUrl="mods/top" />
             </div>
 
             {/* 
