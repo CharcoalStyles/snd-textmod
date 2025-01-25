@@ -54,8 +54,8 @@ export async function setCachedTextmod(
   console.log("Setting cached data");
   const client = new DynamoDBClient();
 
-  // create ttl for 3 hours, in seconds
-  const ttl = Math.floor(Date.now() / 1000) + 60 * 60 * 3;
+  // create ttl for 1 hour, in seconds
+  const ttl = Math.floor(Date.now() / 1000) + 60 * 60;
 
   console.log("start Compressing");
 

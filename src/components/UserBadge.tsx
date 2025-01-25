@@ -65,6 +65,17 @@ export const UserBadge = () => {
             menuOpen ? "block" : "hidden"
           )}>
           <Button
+            label="Profile"
+            variant="primary"
+            fullWidth
+            noBorder
+            onClick={() => {
+              router.push(
+                `/user/${userData![0].username.toLowerCase().replace(" ", "-")}`
+              );
+            }}
+          />
+          <Button
             label="Logout"
             fullWidth
             noBorder
