@@ -26,9 +26,5 @@ export const Footer = () => (
         GitHub
       </Text>
     </Link>
-    |
-    <Text variant="black">
-        v1.1
-      </Text>
   </footer>
 );
