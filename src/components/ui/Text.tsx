@@ -104,6 +104,7 @@ export const Text = ({
         "leading-4": closeLines,
       },
     ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fontSize, fontType, variant, onHover]);
 
   switch (tag) {

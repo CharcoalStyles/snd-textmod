@@ -23,6 +23,7 @@ const NewUserPage: React.FC = () => {
       console.warn("Error fetching user details:", error);
       router.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const NewUserPage: React.FC = () => {
         }
       }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, user, userData]);
 
   if (loading || !user || userData === undefined || userData.length > 0) {

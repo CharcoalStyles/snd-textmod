@@ -2,6 +2,7 @@ import { Button, Modal, Text, TextArea } from "@/components/ui";
 import { supabaseAtom } from "@/utils/supabase";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useAtom } from "jotai";
+import Link from "next/link";
 import { useState } from "react";
 
 type CommentProps = {
@@ -46,11 +47,11 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                 className="basis-72 max-w-96 flex-grow flex flex-col border border-text p-2 my-2">
                 <div className="flex flex-row justify-between">
                   <div>
-                  {c.comment.split("~n").map((l) => (
-                  <Text key={l} fontSize="xl" fontType="body">
-                    {l}
-                  </Text>
-                  ))}
+                    {c.comment.split("~n").map((l) => (
+                      <Text key={l} fontSize="xl" fontType="body">
+                        {l}
+                      </Text>
+                    ))}
                   </div>
                   {user && user.id === c.creator.id && (
                     <Text
@@ -77,7 +78,15 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                   )}
                 </div>
                 <div className="flex flex-row justify-between">
-                  <Text fontType="body">By {c.creator.username}</Text>
+                  <Text fontType="body">
+                    By{" "}
+                    <Link
+                      href={`/user/${c.creator.username
+                        .toLowerCase()
+                        .replace(" ", "-")}`}>
+                      {c.creator.username}
+                    </Link>
+                  </Text>
                   <Text fontType="body">{c.createdDate.toDateString()}</Text>
                 </div>
               </div>

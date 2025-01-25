@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button, Input, Text, TextArea } from "./ui";
 import { useEffect, useState } from "react";
 import FileInput from "./ui/FileInput";

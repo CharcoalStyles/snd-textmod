@@ -17,6 +17,7 @@ export function SbAuth({ isOpen, onClose }: SbAuthProps) {
 
   useEffect(() => {
     supabase.auth.getSession();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (user) {

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Header, Loader } from "@/components";
 import { Comments } from "@/components/Comments";
 import { Footer } from "@/components/Footer";
@@ -7,6 +8,7 @@ import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
 import { supabase } from "@/utils/supabase";
 import { User, useUser } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -74,6 +76,8 @@ export default function TextModPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const user = useUser();
 
+  console.log("data", data);
+
   const userVote = findUserVote(user !== null ? user : undefined, data?.votes);
 
   return (
@@ -98,10 +102,15 @@ export default function TextModPage() {
                     fontType="heading">
                     {data.name}
                   </Text>
-                  <div className="-mt-3 md:-mt-5">
-                    <Text fontSize="3xl" scale fontType="body">
-                      By {data.creator.name}
+                  <div className="-mt-3 md:-mt-5 flex flex-row gap-2">
+                    <Text fontSize="3xl" scale>
+                      By: 
                     </Text>
+                    <Link href={`/user/${data.creator.slug}`}>
+                      <Text fontSize="3xl" scale fontType="body" showHoverable onHover>
+                        {data.creator.name}
+                      </Text>
+                    </Link>
                   </div>
                 </div>
                 <div className="flex flex-col justify-between text-right mt-5">
@@ -162,7 +171,11 @@ export default function TextModPage() {
                           id &&
                           handleVoteClick(id, true, refetch, userVote);
                       }}>
-                      ↑{data.votes.filter((v) => v.upvote).length}
+                      ↑
+                      {
+                        data.votes.filter((v: { upvote: boolean }) => v.upvote)
+                          .length
+                      }
                     </Text>
                     <Text
                       fontSize="3xl"
@@ -175,7 +188,11 @@ export default function TextModPage() {
                           id &&
                           handleVoteClick(id, false, refetch, userVote);
                       }}>
-                      ↓{data.votes.filter((v) => !v.upvote).length}
+                      ↓
+                      {
+                        data.votes.filter((v: { upvote: boolean }) => !v.upvote)
+                          .length
+                      }
                     </Text>
                   </div>
                 </div>
@@ -207,16 +224,15 @@ export default function TextModPage() {
                 </div>
               </div>
               <hr className="my-2" />
-              {
-                data.mainImage && (
-                  <div className="flex flex-row justify-center">
-                    <img
-                      src={data.mainImage}
-                      alt="main image"
-                      className="rounded-lg object-scale-down max-h-96 max-w-full"
-                    />
-                  </div>
-                )}
+              {data.mainImage && (
+                <div className="flex flex-row justify-center">
+                  <img
+                    src={data.mainImage}
+                    alt="main image"
+                    className="rounded-lg object-scale-down max-h-96 max-w-full"
+                  />
+                </div>
+              )}
 
               {id && (
                 <Comments

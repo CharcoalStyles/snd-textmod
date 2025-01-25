@@ -1,6 +1,5 @@
 import { Button, Text } from "./ui";
 import { useEffect, useRef, useState } from "react";
-// import { getSupabase } from "@/utils/supabase";
 import clsx from "clsx";
 import { useUser } from "@/hooks/useUser";
 import { useAtom } from "jotai";
@@ -41,6 +40,7 @@ export const UserBadge = () => {
         refetch();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, isLoading]);
 
   if (loading) {

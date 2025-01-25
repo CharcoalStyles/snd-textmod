@@ -28,7 +28,12 @@ export const useTextMod = (id?: number) => {
       const fixedData = {
         id: data.id,
         mainImage: data.main_image,
-        comments: data.mod_comments.map((c) => {
+        comments: data.mod_comments.map((c:{
+          user_id: { id: string; username: string };
+          created_at: string;
+          id: number;
+          comment: string;
+        }) => {
           return {
             //@ts-ignore
             creator: c.user_id as { id: string; username: string },
@@ -43,6 +48,7 @@ export const useTextMod = (id?: number) => {
           name: data.user_id.username,
           //@ts-ignore
           id: data.user_id.id,
+          slug: data.user_id.username.toLowerCase().replace(" ", "-"),
         },
         description: data.description,
         mod: data.mod,

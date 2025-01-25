@@ -87,9 +87,11 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
             slug: creatorSlug,
           },
           description: mod.description,
+          // @ts-ignore
           downvotes: mod.mod_votes.filter(({ upvote }) => !upvote).length,
           name: mod.name,
           mod: mod.mod,
+          // @ts-ignore
           upvotes: mod.mod_votes.filter(({ upvote }) => upvote).length,
         } as TextmodCardProps;
       });

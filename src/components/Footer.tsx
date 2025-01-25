@@ -2,7 +2,7 @@ import { Text } from "@/components/ui";
 import Link from "next/link";
 
 export const Footer = () => (
-  <footer className="fixed w-screen h-min-6 px-8 bg-secondary z-50 bottom-0 flex flex-row gap-2 justify-center">
+  <footer className="fixed w-screen h-min-6 px-4 bg-secondary z-50 bottom-0 flex flex-row gap-2 justify-center">
     <Link href="https://www.charcoalstyles.com">
       <Text variant="black" onHover showHoverable>
         charcoalstyles.com
@@ -26,5 +26,9 @@ export const Footer = () => (
         GitHub
       </Text>
     </Link>
+    |
+    <Text variant="black">
+        v1.1
+      </Text>
   </footer>
 );
