@@ -7,11 +7,10 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <Script
+        <script
           async
-          defer
-          data-website-id={umamiKey}
-          src="https://umami.charcoalstyles.com/script.js"></Script>
+          src="https://umami.charcoalstyles.com/script.js"
+          data-website-id="331d8223-22e2-47a0-8aad-ffc166bdd915"></script>
       </Head>
       <body>
         <Main />
