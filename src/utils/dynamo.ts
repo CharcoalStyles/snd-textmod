@@ -148,8 +148,9 @@ export async function getCachedTextmod(id: number) {
   });
 
   const { Items } = await client.send(command);
+  console.log(Items);
 
-  if (!Items) {
+  if (!Items || Items.length === 0) {
     return null;
   }
 
