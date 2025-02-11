@@ -1,7 +1,7 @@
 import { TextmodCardProps } from "@/components";
 import { generateSupabaseClient, sbToTextmods } from "@/utils/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getCachedTextmod, setCachedTextmod } from "@/utils/dynamo";
+import { getCachedTextmod_old, setCachedTextmod_old } from "@/utils/dynamo";
 
 type ResponseData = Array<TextmodCardProps> | { message: string };
 
@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   const table = "mods_rated_alltime";
   const tableKey = `${table}-full`;
-  const items = await getCachedTextmod(tableKey);
+  const items = await getCachedTextmod_old(tableKey);
 
   if (items && items.length > 0) {
     console.log("Sending data 1");
@@ -36,7 +36,7 @@ export default async function handler(
   //@ts-ignore
   const textmods = sbToTextmods(data?.map((map) => ({ ...map.mods })));
 
-  await Promise.all(textmods.map((d, i) => setCachedTextmod(tableKey, d, i)));
+  await Promise.all(textmods.map((d, i) => setCachedTextmod_old(tableKey, d, i)));
 
   return res.status(200).json(textmods);
 }
