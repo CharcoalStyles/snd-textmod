@@ -37,7 +37,9 @@ export const getModTextmod = async (id: number) => {
 };
 
 export const sbToTextmods = (data: any) => {
-  const fixedData: Array<TextmodCardProps> = data.map((row: any) => {
+  const fixedData: Array<TextmodCardProps & {
+    mod: string;
+  }> = data.map((row: any) => {
     // Forgive me, for this is the only way to make this work
     // The data returned from Supabase is correct, but the logic they have for types is broken
     //@ts-ignore
