@@ -84,10 +84,6 @@ export const UserBadge = () => {
               supabase.auth.signOut();
             }}
           />
-          <hr />
-          <div className="mt-2">
-            <Text fontSize="sm">v1.1</Text>
-          </div>
         </div>
       </div>
     </div>
