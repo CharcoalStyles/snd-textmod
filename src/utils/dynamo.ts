@@ -48,7 +48,7 @@ export async function getCachedTextmod(key: string) {
 
 export async function setCachedTextmod(
   table: string,
-  data: TextmodCardProps,
+  data: TextmodCardProps & { mod: string },
   index: number
 ) {
   console.log("Setting cached data");
