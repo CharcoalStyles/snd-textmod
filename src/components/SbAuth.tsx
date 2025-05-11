@@ -33,6 +33,7 @@ export function SbAuth({ isOpen, onClose }: SbAuthProps) {
         <div data-testid="sb-auth-modal">
           <MagicLink
             supabaseClient={supabase}
+            
             appearance={{
               theme: ThemeSupa,
               style:{

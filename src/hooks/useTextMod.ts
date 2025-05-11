@@ -14,7 +14,7 @@ export const useTextMod = (id?: number) => {
       let query = supabase
         .from("mods")
         .select(
-          "*,mod_votes(*), mod_comments(*, user_id(id, username)), user_id(*)"
+          "id, name, description, created_at, main_image, mod_votes(*), mod_comments(*, user_id(id, username)), user_id(*)"
         )
         .eq("id", id);
 
@@ -28,14 +28,8 @@ export const useTextMod = (id?: number) => {
       const fixedData = {
         id: data.id,
         mainImage: data.main_image,
-        comments: data.mod_comments.map((c:{
-          user_id: { id: string; username: string };
-          created_at: string;
-          id: number;
-          comment: string;
-        }) => {
+        comments: data.mod_comments.map((c) => {
           return {
-            //@ts-ignore
             creator: c.user_id as { id: string; username: string },
             createdDate: new Date(c.created_at),
             id: c.id,
@@ -44,14 +38,11 @@ export const useTextMod = (id?: number) => {
         }),
         createdDate: new Date(data.created_at),
         creator: {
-          //@ts-ignore
           name: data.user_id.username,
-          //@ts-ignore
           id: data.user_id.id,
           slug: data.user_id.username.toLowerCase().replace(" ", "-"),
         },
         description: data.description,
-        mod: data.mod,
         name: data.name,
         votes: data.mod_votes,
       };

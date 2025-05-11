@@ -1,12 +1,11 @@
 import { Text } from "@/components/ui";
+import { getModTextmod } from "@/utils/supabase";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export type TextmodCardProps = {
   id: number;
   name: string;
-  mod: string;
   description: string;
   creator: {
     name: string;
@@ -22,7 +21,6 @@ export const TextmodCard = ({
   id,
   description,
   name,
-  mod,
   commentCount,
   creator,
   downvotes,
@@ -30,7 +28,6 @@ export const TextmodCard = ({
   createdDate,
 }: TextmodCardProps) => {
   const [copyText, setCopyText] = useState("Copy");
-  const router = useRouter();
 
   return (
     <div className="w-full flex flex-col border border-secondary">
@@ -54,11 +51,18 @@ export const TextmodCard = ({
                 onHover
                 showHoverable
                 onClick={() => {
-                  navigator.clipboard.writeText(mod);
-                  setCopyText("Copied!");
-                  setTimeout(() => {
-                    setCopyText("Copy");
-                  }, 2000);
+                  setCopyText("Loading!");
+                  getModTextmod(id).then((data) => {
+                    if (data) {
+                      navigator.clipboard.writeText(data);
+                      setCopyText("Copied!");
+                    } else {
+                      setCopyText("Error");
+                    }
+                    setTimeout(() => {
+                      setCopyText("Copy");
+                    }, 2000);
+                  });
                 }}>
                 {copyText}
               </Text>

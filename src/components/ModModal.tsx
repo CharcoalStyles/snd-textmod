@@ -7,7 +7,8 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { Database } from "@/utils/schema";
 
 type ModModalProps = {
-  preFill?: TextmodFormData;
+  preFill?: Omit<TextmodFormData, 'mod'>;
+  mod?: string;
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: () => void;
@@ -17,6 +18,7 @@ type ModModalProps = {
 
 export const ModModal = ({
   preFill,
+  mod,
   isOpen,
   onClose,
   onSubmit,
@@ -46,6 +48,7 @@ export const ModModal = ({
           </div>
           <ModForm
             preFill={preFill}
+            mod={mod}
             onCancel={() => {
               onClose();
             }}

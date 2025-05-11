@@ -22,14 +22,13 @@ export default async function handler(
   console.log("Getting live data");
   const supabase = generateSupabaseClient();
 
-  // const { data, error } = await supabase
   let { error, data } = await supabase
     .from(table)
     .select("*,mod_votes(*), mod_comments(count), user_id(username)")
     .order("created_at", { ascending: false })
     .limit(10);
 
-  if (error) {
+  if (error || !data) {
     console.error("Error fetching records:", error);
     return res.status(500).json({ message: "Error fetching records" });
   }

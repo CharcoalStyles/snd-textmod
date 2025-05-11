@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { atom } from "jotai";
 import { TextmodCardProps } from "@/components";
+import { Database } from "./schema";
 
 export const generateSupabaseClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -14,7 +15,7 @@ export const generateSupabaseClient = () => {
     throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
 
-  return createClient(supabaseUrl, supabaseKey);
+  return createClient<Database>(supabaseUrl, supabaseKey);
 };
 
 export const supabase = generateSupabaseClient();
@@ -22,20 +23,35 @@ export const supabase = generateSupabaseClient();
 const coreSupabaseAtom = atom(supabase);
 export const supabaseAtom = atom((get) => get(coreSupabaseAtom));
 
+export const getModTextmod = async (id: number) => {
+  const { data, error } = await supabase
+    .from("mods")
+    .select("mod")
+    .eq("id", id)
+    .single();
+  if (error) {
+    console.error("Error fetching mod textmod:", error);
+    return null;
+  }
+  return data?.mod;
+};
+
 export const sbToTextmods = (data: any) => {
-  const fixedData:Array<TextmodCardProps> = data.map((row:any) => {
+  const fixedData: Array<TextmodCardProps> = data.map((row: any) => {
     // Forgive me, for this is the only way to make this work
     // The data returned from Supabase is correct, but the logic they have for types is broken
     //@ts-ignore
 
     const realMod = row;
-    const {mod, ...rest } = realMod;
-    
-    console.log({rest})
+    const { mod, ...rest } = realMod;
+
+    console.log({ rest });
 
     const fix = {
       //@ts-ignore
-      commentCount: Object.hasOwn(realMod, 'mod_comments') ? realMod.mod_comments[0].count : 0,
+      commentCount: Object.hasOwn(realMod, "mod_comments")
+        ? realMod.mod_comments[0].count
+        : 0,
       //@ts-ignore
       createdDate: new Date(realMod.created_at),
       creator: {

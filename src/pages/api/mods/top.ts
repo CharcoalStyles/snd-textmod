@@ -28,13 +28,12 @@ export default async function handler(
     .select("*, mods(*, mod_votes(*), mod_comments(count), user_id(username))")
     .limit(10);
 
-  if (error) {
+  if (error || !data) {
     console.error("Error fetching records:", error);
     return res.status(500).json({ message: "Error fetching records" });
   }
 
-  //@ts-ignore
-  const textmods = sbToTextmods(data?.map((map) => ({ ...map.mods })));
+  const textmods = sbToTextmods(data.map((map) => ({ ...map.mods })));
 
   await Promise.all(textmods.map((d, i) => setCachedTextmod(tableKey, d, i)));
 

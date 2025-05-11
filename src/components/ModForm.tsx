@@ -5,6 +5,7 @@ import FileInput from "./ui/FileInput";
 import { useAtom } from "jotai";
 import { supabaseAtom } from "@/utils/supabase";
 import { useUser } from "@supabase/auth-helpers-react";
+import { Loader } from "./Loader";
 
 export type TextmodFormData = {
   id?: number;
@@ -18,7 +19,8 @@ export type TextmodFormData = {
 };
 
 type ModFormProps = {
-  preFill?: TextmodFormData;
+  preFill?: Omit<TextmodFormData, "mod">;
+  mod?: string;
   onSubmit: (data: TextmodFormData) => void;
   onCancel: () => void;
   disabled?: boolean;
@@ -30,19 +32,28 @@ export const ModForm = ({
   onCancel,
   onSubmit,
   preFill,
-  outerError
-}: ModFormProps) => {  
-  const [formData, setFormData] = useState<TextmodFormData>(
-    preFill || {
-      name: "",
-      description: "",
-      mod: "",
-      mainImage: undefined,
-      secondaryImages: [],
-    }
-  );
+  mod,
+  outerError,
+}: ModFormProps) => {
+  const [formData, setFormData] = useState<TextmodFormData>({
+    name: "",
+    description: "",
+    mod: mod || "",
+    mainImage: undefined,
+    secondaryImages: [],
+    ...preFill,
+  });
   const [error, setError] = useState<string | null>(null);
   const maxNameLength = 100;
+
+  useEffect(() => {
+    if (mod) {
+      setFormData((prev) => ({
+        ...prev,
+        mod: mod,
+      }));
+    }
+  }, [mod]);
 
   useEffect(() => {
     if (outerError) {
@@ -82,74 +93,83 @@ export const ModForm = ({
                 setFormData((prev) => ({ ...prev, description: v }));
               }}
             />
-            <TextArea
-              label="TextMod"
-              rows={5}
-              value={formData.mod}
-              onChange={(v) => {
-                setFormData((prev) => ({ ...prev, mod: v }));
-              }}
-            />
+            {mod !== undefined ? (
+              <TextArea
+                label="TextMod"
+                rows={5}
+                value={formData.mod || ""}
+                onChange={(v) => {
+                  setFormData((prev) => ({ ...prev, mod: v }));
+                }}
+              />
+            ) : (
+              <div className="w-full text-center">
+                <Loader size="2xl" color="secondary" />
+              </div>
+            )}
             {formData.mainImageUrl && (
-               <div className="flex flex-row justify-center">
-               <img
-                 src={formData.mainImageUrl}
-                 alt="main image"
-                 width={150}
-                 height={150}
-                 className="rounded-lg"
-               />
-               <div>
-                 <Button
-                   variant="danger"
-                   label="Remove"
-                   onClick={() => {
-                     setFormData((prev) => ({
-                       ...prev,
-                       mainImage: undefined,
-                       mainImageUrl: undefined,
-                     }));
-                   }}
-                   />
-               </div>
-             </div>
+              <div className="flex flex-row justify-center">
+                <img
+                  src={formData.mainImageUrl}
+                  alt="main image"
+                  width={150}
+                  height={150}
+                  className="rounded-lg"
+                />
+                <div>
+                  <Button
+                    variant="danger"
+                    label="Remove"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        mainImage: undefined,
+                        mainImageUrl: undefined,
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
             )}
             {formData.mainImage && (
-               <div className="flex flex-row justify-center">
-               <img
-                 src={URL.createObjectURL(formData.mainImage)}
-                 alt="main image"
-                 width={150}
-                 height={150}
-                 className="rounded-lg"
-               />
-               <div>
-                 <Button
-                   variant="danger"
-                   label="Remove"
-                   onClick={() => {
-                     setFormData((prev) => ({
-                       ...prev,
-                       mainImage: undefined,
-                       mainImageUrl: undefined,
-                     }));
-                   }}
-                   />
-               </div>
-             </div>
+              <div className="flex flex-row justify-center">
+                <img
+                  src={URL.createObjectURL(formData.mainImage)}
+                  alt="main image"
+                  width={150}
+                  height={150}
+                  className="rounded-lg"
+                />
+                <div>
+                  <Button
+                    variant="danger"
+                    label="Remove"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        mainImage: undefined,
+                        mainImageUrl: undefined,
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
             )}
             {!formData.mainImage && !formData.mainImageUrl && (
-            <FileInput
-              label="Main Image"
-              accept="image/png, image/jpeg"
-              onChange={(e) => {
-                setFormData((prev) => ({ ...prev, mainImage: e.target.files?.[0] }));
-              }}
-            />
+              <FileInput
+                label="Main Image"
+                accept="image/png, image/jpeg"
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    mainImage: e.target.files?.[0],
+                  }));
+                }}
+              />
             )}
           </div>
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 mt-4">
           <Button
             variant="primary"
             disabled={disabled}

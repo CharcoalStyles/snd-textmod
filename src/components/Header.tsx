@@ -63,6 +63,7 @@ export const Header = () => {
         onClose={() => setIsModalOpen(false)}
         description="Add a new textmod to the database. Name and TextMod are required fields. Description is highly recommended."
         title="Add new TextMod"
+        mod=""
       />
       <SbAuth
         isOpen={showAuth}

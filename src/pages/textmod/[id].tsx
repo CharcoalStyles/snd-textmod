@@ -6,7 +6,7 @@ import { ModModal } from "@/components/ModModal";
 import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
-import { supabase } from "@/utils/supabase";
+import { getModTextmod, supabase } from "@/utils/supabase";
 import { User, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -68,13 +68,15 @@ const handleVoteClick = async (
 
 export default function TextModPage() {
   const router = useRouter();
-  const id = router.query.id
+  const id = router.query.id!
     ? Number.parseInt(router.query.id as string)
     : undefined;
   const { data, error, isLoading, refetch } = useTextMod(id);
   const [showTextMod, setShowTextMod] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const user = useUser();
+  const [modText, setModText] = useState<string>();
+  const [copyText, setCopyText] = useState("Copy");
 
   console.log("data", data);
 
@@ -104,10 +106,15 @@ export default function TextModPage() {
                   </Text>
                   <div className="-mt-3 md:-mt-5 flex flex-row gap-2">
                     <Text fontSize="3xl" scale>
-                      By: 
+                      By:
                     </Text>
                     <Link href={`/user/${data.creator.slug}`}>
-                      <Text fontSize="3xl" scale fontType="body" showHoverable onHover>
+                      <Text
+                        fontSize="3xl"
+                        scale
+                        fontType="body"
+                        showHoverable
+                        onHover>
                         {data.creator.name}
                       </Text>
                     </Link>
@@ -126,6 +133,11 @@ export default function TextModPage() {
                             showHoverable
                             onHover
                             onClick={() => {
+                              getModTextmod(id!).then((data) => {
+                                if (data) {
+                                  setModText(data);
+                                }
+                              });
                               setShowEditModal(true);
                             }}
                             fontType="body">
@@ -171,11 +183,7 @@ export default function TextModPage() {
                           id &&
                           handleVoteClick(id, true, refetch, userVote);
                       }}>
-                      ↑
-                      {
-                        data.votes.filter((v: { upvote: boolean }) => v.upvote)
-                          .length
-                      }
+                      ↑{data.votes.filter((v) => v.upvote).length}
                     </Text>
                     <Text
                       fontSize="3xl"
@@ -188,11 +196,7 @@ export default function TextModPage() {
                           id &&
                           handleVoteClick(id, false, refetch, userVote);
                       }}>
-                      ↓
-                      {
-                        data.votes.filter((v: { upvote: boolean }) => !v.upvote)
-                          .length
-                      }
+                      ↓{data.votes.filter((v) => !v.upvote).length}
                     </Text>
                   </div>
                 </div>
@@ -208,15 +212,31 @@ export default function TextModPage() {
                   <div className="flex flex-row gap-2 justify-end">
                     <Button
                       variant="accent"
-                      label="Copy"
+                      label={copyText}
                       onClick={() => {
-                        navigator.clipboard.writeText(data.mod!);
+                        setCopyText("Loading!");
+                        getModTextmod(id!).then((data) => {
+                          if (data) {
+                            navigator.clipboard.writeText(data);
+                            setCopyText("Copied!");
+                          } else {
+                            setCopyText("Error");
+                          }
+                          setTimeout(() => {
+                            setCopyText("Copy");
+                          }, 2000);
+                        });
                       }}
                     />
                     <Button
                       variant="secondary"
                       label={showTextMod ? "Hide" : "Show"}
                       onClick={() => {
+                        getModTextmod(id!).then((data) => {
+                          if (data) {
+                            setModText(data);
+                          }
+                        });
                         setShowTextMod(!showTextMod);
                       }}
                     />
@@ -250,9 +270,9 @@ export default function TextModPage() {
                   id: data.id,
                   name: data.name ? data.name : "",
                   description: data.description ? data.description : "",
-                  mod: data.mod ? data.mod : "",
                   mainImageUrl: data.mainImage ? data.mainImage : undefined,
                 }}
+                mod={modText}
                 isOpen={showEditModal}
                 onClose={() => {
                   setShowEditModal(false);
@@ -269,13 +289,19 @@ export default function TextModPage() {
                 }}>
                 <div className="break-all flex flex-col gap-4">
                   <div className="max-h-96 w-full overflow-y-auto scrollbar scrollbar-thumb-secondary">
-                    <Text fontType="body">{data.mod}</Text>
+                    {modText ? (
+                      <Text fontType="body">{modText}</Text>
+                    ) : (
+                      <div className="w-full text-center">
+                        <Loader size="2xl" color="secondary" />
+                      </div>
+                    )}
                   </div>
                   <Button
                     variant="accent"
                     label="Copy"
                     onClick={() => {
-                      navigator.clipboard.writeText(data.mod!);
+                      // navigator.clipboard.writeText(data.mod!);
                     }}
                   />
                   <Button
