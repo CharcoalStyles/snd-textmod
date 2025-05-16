@@ -19,9 +19,6 @@ export const Hero: React.FC<HeroProps> = ({ title, subtitle, image }) => {
             {subtitle}
           </Text>
         </div>
-        {/* <div className="mt-10">
-          <img className="mx-auto h-40 sm:h-56 md:h-64 lg:h-80" src={image} alt="Hero" />
-        </div> */}
       </div>
     </div>
   );

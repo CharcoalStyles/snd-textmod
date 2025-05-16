@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Text } from "./Text";
-import { clsx } from "clsx";
 
 type CheckboxProps = {
   label: string;
