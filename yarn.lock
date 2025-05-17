@@ -4412,50 +4412,50 @@ source-map-js@^1.2.1:
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"
   integrity sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==
 
-sst-darwin-arm64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-darwin-arm64/-/sst-darwin-arm64-3.14.12.tgz#115c7768c6cc39b5a02a8c2ac1bad225ab89f812"
-  integrity sha512-mjZTdtiA4gEaM/rqRsTnPWQXeKZxxnm82VUgkLPG2VLZB7+EF9eaPcVS/4rUKnvDvHCvB3gjadHQjyQpStymag==
+sst-darwin-arm64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-darwin-arm64/-/sst-darwin-arm64-3.14.27.tgz#1f48db83a8a85bbe5a486b70f28b5fa54f979f7d"
+  integrity sha512-r45bqBwvuXyyMNgoUAMuzXkxaaH1e3HpJbEA6IbM5o2upafg5UvYsi20MxsTyaW/9/osXxcJzJQdX/PQv66cmw==
 
-sst-darwin-x64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-darwin-x64/-/sst-darwin-x64-3.14.12.tgz#4c68936c8d8e01cd54f09b8c114d16048c724383"
-  integrity sha512-gpvgqt0bL8YkrVPwSXLozCCu40iK4EYmR3GpD81VQtKPn8Pud8YUzF+TfWwJOOWIIvFD5ZIaiWZYIDRq55iwKQ==
+sst-darwin-x64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-darwin-x64/-/sst-darwin-x64-3.14.27.tgz#7f5b7b4c3be60930f5916dcaf1cbfe190d45b43f"
+  integrity sha512-xIQjJhY9/riAlxy8pjRMHIqOi4YWg+RzwXq8TkHbxQ9+gxRKU1ffFqXUkKkbH9l7aS31HUws2Ha5LPZ5nCBuHQ==
 
-sst-linux-arm64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-linux-arm64/-/sst-linux-arm64-3.14.12.tgz#cf71e813b562713c9b7e7a26ae13d375e95120e4"
-  integrity sha512-UPIc1zBtxcDMlqVXvyuc255Gf8UVZYQLBTNiACzGsHqplgXPK3hUENrTnUnq+36s6FEuJ7DcJWtJMt2LOeZWtw==
+sst-linux-arm64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-linux-arm64/-/sst-linux-arm64-3.14.27.tgz#c8b984f93acc9612c06862d5896152eeba4428da"
+  integrity sha512-Vlw+//iByS09rpEpj5NpYy4hCcBfTvJH3cXG+Qiz/+msjnq87FNEl4BgAeazoVqYLhpERm+IRwhc+Ze2nUsBaQ==
 
-sst-linux-x64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-linux-x64/-/sst-linux-x64-3.14.12.tgz#0671e335c1c3073e3844e64f87764a11b7e3f120"
-  integrity sha512-xgPLHlMVVqH0TV73MI29ThaeVzgx8e5woeFiZlWpH1x9sCOOK6TO98HTIMgYphK+xu2a9Hk9WsypCSM698SoRw==
+sst-linux-x64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-linux-x64/-/sst-linux-x64-3.14.27.tgz#bf440965717510cbd023548bfce9bbf51a04c00f"
+  integrity sha512-6ORgZSe8PCH7wE6yXhWEJWoiCYewx56nvA9Y9FnsuOESPUCdhgB4hACBN/xi2oRuvzqcB1XIskbNQmOYwoODSw==
 
-sst-linux-x86@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-linux-x86/-/sst-linux-x86-3.14.12.tgz#46271ac034e79b95d7f52e5d51ab64ff0b0015f9"
-  integrity sha512-MuwjqhCBoUYGQT2lgjbvm8mj2fgjOTkTlAqhdvHy2Kl3LU/gWP/Qxc7/Z2qkbi3kQkn9ukZghDdwjLCy9ioteQ==
+sst-linux-x86@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-linux-x86/-/sst-linux-x86-3.14.27.tgz#35b9c5b8ef4271b51d63196047d5e8dacd96fe80"
+  integrity sha512-sCWe+Pt4LCuWH77TZoWSgFdl/4ztgiPfTVaSBPR14XueYT/oGoqnTAxQV6T5JUlv2qU12NZSlt3eFXe6fUq9Lw==
 
-sst-win32-arm64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-win32-arm64/-/sst-win32-arm64-3.14.12.tgz#89a3e6d803d77177d4d2938b1328dd6aa7d1b77a"
-  integrity sha512-696e8e03kUxUr3RE4/191/D1tWnWiFixaeGsksz9dysZhduVy3lsswmPqxes55s6JVqSMSUKptujUGhD+mXWmQ==
+sst-win32-arm64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-win32-arm64/-/sst-win32-arm64-3.14.27.tgz#01396c4a3bca6cac276e3df310d99b6512204af1"
+  integrity sha512-wQH2nZ0xYE5L7C6z6hpmZE8mKEFbwOJG2VaRMP2FiCQVMEKn2yp2GULHoW6fCjl1P9v74Fg39pSFyYw1kkn8Rg==
 
-sst-win32-x64@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-win32-x64/-/sst-win32-x64-3.14.12.tgz#fe9b8dc49fc7d3376b3d3a9a0fb759e1530c2aa6"
-  integrity sha512-3eDVbbTN+ZkD9jWKLb/RQspHHom7YnG81jX6ZczMzR1H0cQ5ta/lDWgbUytjxu1rPYXTHzEuBOdo+FI9pgzy5A==
+sst-win32-x64@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-win32-x64/-/sst-win32-x64-3.14.27.tgz#56a20cc6e45c87dc52042c45543ce2141fc5d2b4"
+  integrity sha512-Ad6JDLg8M+Se8JiH7zt/xTriMS9PMrCZYkGFDY59QHCMjAlgVrh27wuAPF0AkY3tMAxAQexc9tVeNgljLFMqRg==
 
-sst-win32-x86@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst-win32-x86/-/sst-win32-x86-3.14.12.tgz#f116989e99bc345f1d0f53bbfbcf1c6720e66eea"
-  integrity sha512-txTVJengDAdbvZ+Y56S6xp35k+SN9Qnh8mA52QN6cBvV5cPIEMXQqzkVcspH88Eagtc7fijStCQqDrz30jG6xQ==
+sst-win32-x86@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst-win32-x86/-/sst-win32-x86-3.14.27.tgz#520799be4ed0ed98bc7831ec33de14dc8423f197"
+  integrity sha512-5lHor+88jNPxpvz0yOj+tyIR5pOeVYCAcyKm11rYlh3LDsOcr8kVLNBT5wtQD0cYWmdrw3aeNjYgtHOsKOAOqQ==
 
-sst@3.14.12:
-  version "3.14.12"
-  resolved "https://registry.yarnpkg.com/sst/-/sst-3.14.12.tgz#25460fc136c8ffcd8fb48ffe9860c15c4a51ee64"
-  integrity sha512-VcKipIZr8bGpe9mW0dTxTMZhAhIkO2aBK8CZUB6RhzU58fw7PRF8gJdi3zUSVNM9QObZgFwdpsK3uepWl2Rp0g==
+sst@3.14.27:
+  version "3.14.27"
+  resolved "https://registry.yarnpkg.com/sst/-/sst-3.14.27.tgz#819645de0952ca272684268da34743944671d270"
+  integrity sha512-jZmBrV0+QgRUfziII+6QKXn+qq7hu5H4ua+Vl9Ig5/mW1A9Pl+seJykTlGuHCvmziV6vi3GjEvfPc206DKnbeQ==
   dependencies:
     aws-sdk "2.1692.0"
     aws4fetch "1.0.18"
@@ -4463,14 +4463,14 @@ sst@3.14.12:
     opencontrol "0.0.6"
     openid-client "5.6.4"
   optionalDependencies:
-    sst-darwin-arm64 "3.14.12"
-    sst-darwin-x64 "3.14.12"
-    sst-linux-arm64 "3.14.12"
-    sst-linux-x64 "3.14.12"
-    sst-linux-x86 "3.14.12"
-    sst-win32-arm64 "3.14.12"
-    sst-win32-x64 "3.14.12"
-    sst-win32-x86 "3.14.12"
+    sst-darwin-arm64 "3.14.27"
+    sst-darwin-x64 "3.14.27"
+    sst-linux-arm64 "3.14.27"
+    sst-linux-x64 "3.14.27"
+    sst-linux-x86 "3.14.27"
+    sst-win32-arm64 "3.14.27"
+    sst-win32-x64 "3.14.27"
+    sst-win32-x86 "3.14.27"
 
 statuses@2.0.1, statuses@^2.0.1:
   version "2.0.1"
