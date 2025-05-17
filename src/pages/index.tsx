@@ -3,6 +3,7 @@ import { Search } from "@/components/Search";
 import { TextmodList } from "@/components";
 import { Button, Text } from "@/components/ui";
 import { Footer } from "@/components/Footer";
+import { RandomModButton } from "@/components/RandomModButton";
 
 export default function Home() {
   return (
@@ -10,8 +11,9 @@ export default function Home() {
       <Header />
       <div className="h-screen p-2 w-screen overflow-y-auto scrollbar scrollbar-thumb-primary">
         <div className="">
-          <div className="mx-auto w-80">
+          <div className="flex flex-col gap-4 mx-auto w-80">
             <Search />
+            <RandomModButton />
           </div>
           <div className="flex flex-row gap-4 flex-wrap justify-center">
             <div className="basis-72 max-w-96 flex-grow">
