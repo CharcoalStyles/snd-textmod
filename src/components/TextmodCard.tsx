@@ -1,5 +1,5 @@
 import { Text } from "@/components/ui";
-import { getModTextmod } from "@/utils/supabase";
+import { getModText } from "@/utils/api";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -52,7 +52,7 @@ export const TextmodCard = ({
                 showHoverable
                 onClick={() => {
                   setCopyText("Loading!");
-                  getModTextmod(id).then((data) => {
+                  getModText(id.toString()).then((data) => {
                     if (data) {
                       navigator.clipboard.writeText(data);
                       setCopyText("Copied!");

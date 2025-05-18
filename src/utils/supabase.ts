@@ -23,18 +23,6 @@ export const supabase = generateSupabaseClient();
 const coreSupabaseAtom = atom(supabase);
 export const supabaseAtom = atom((get) => get(coreSupabaseAtom));
 
-export const getModTextmod = async (id: number) => {
-  const { data, error } = await supabase
-    .from("mods")
-    .select("mod")
-    .eq("id", id)
-    .single();
-  if (error) {
-    console.error("Error fetching mod textmod:", error);
-    return null;
-  }
-  return data?.mod;
-};
 
 export const sbToTextmods = (data: any) => {
   const fixedData: Array<TextmodCardProps & {

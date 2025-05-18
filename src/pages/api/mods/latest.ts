@@ -1,6 +1,5 @@
 import { TextmodCardProps } from "@/components";
-import { getMods } from "@/utils/dynamo";
-import { generateSupabaseClient, sbToTextmods } from "@/utils/supabase";
+import { generateSupabaseClient } from "@/utils/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = Array<TextmodCardProps> | { message: string };
@@ -13,7 +12,9 @@ export default async function handler(
 
   let { error, data } = await supabase
     .from("mods")
-    .select("id, mod_votes(*), mod_comments(count), user_id(username)")
+    .select(
+      "id, name, description, created_at, mod_votes(*), mod_comments(count), user_id(username)"
+    )
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -22,21 +23,18 @@ export default async function handler(
     return res.status(500).json({ message: "Error fetching records" });
   }
 
-  const x = await getMods(data.map((d) => d.id.toString()));
-
-  const textmods = sbToTextmods(
-    x.map((mod) => {
-      const otherData = data.find((d) => d.id === mod!.id);
-      if (otherData) {
-        return {
-          ...mod,
-          mod_comments: otherData.mod_comments,
-          mod_votes: otherData.mod_votes,
-          user_id: otherData.user_id,
-        };
-      }
-    })
+  return res.status(200).json(
+    data.map((d) => ({
+      ...d,
+      commentCount: d.mod_comments[0]?.count || 0,
+      createdDate: new Date(d.created_at),
+      creator: {
+        name: d.user_id.username,
+        slug: d.user_id.username.toLowerCase().replace(" ", "-"),
+      },
+      downvotes: d.mod_votes.filter(({ upvote }) => !upvote).length,
+      upvotes: d.mod_votes.filter(({ upvote }) => upvote).length,
+      id: d.id,
+    })) as Array<TextmodCardProps>
   );
-
-  return res.status(200).json(textmods);
 }

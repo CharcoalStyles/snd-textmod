@@ -1,4 +1,4 @@
-import { saveMod } from "@/utils/dynamo";
+import { saveModText } from "@/utils/dynamo";
 import { Database, Tables } from "@/utils/schema";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -34,7 +34,7 @@ export default async function handler(
     return;
   }
 
-  const result = await saveMod(req.body.record)
+  const result = await saveModText(req.body.record)
 
   return result
     ? res.status(200).json({ message: "Success" })

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from "@/utils/supabase";
-import { saveMod } from '@/utils/dynamo';
+import { saveModText } from '@/utils/dynamo';
  
 type ResponseData = {
   message: string
@@ -51,7 +51,7 @@ export default async function handler(
       break;
     }
 
-    const response = await Promise.all(data.map(async (mod) => saveMod(mod)))
+    const response = await Promise.all(data.map(async (mod) => saveModText(mod.id.toString(), mod.mod!)));
     if (response.some((res) => res === false)) {
       console.error("Error saving mods to DynamoDB");
       response.forEach((res, i) => {

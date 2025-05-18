@@ -6,13 +6,13 @@ import { ModModal } from "@/components/ModModal";
 import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
-import { getModTextmod, supabaseAtom } from "@/utils/supabase";
+import { supabaseAtom } from "@/utils/supabase";
 import { SupabaseClient, User, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { supabase } from "@supabase/auth-ui-shared";
+import { getModText } from "@/utils/api";
 
 const findUserVote = (
   user?: User,
@@ -137,7 +137,7 @@ export default function TextModPage() {
                             showHoverable
                             onHover
                             onClick={() => {
-                              getModTextmod(id!).then((data) => {
+                              getModText(id!.toString()).then((data) => {
                                 if (data) {
                                   setModText(data);
                                 }
@@ -219,7 +219,7 @@ export default function TextModPage() {
                       label={copyText}
                       onClick={() => {
                         setCopyText("Loading!");
-                        getModTextmod(id!).then((data) => {
+                        getModText(id!.toString()).then((data) => {
                           if (data) {
                             navigator.clipboard.writeText(data);
                             setCopyText("Copied!");
@@ -236,7 +236,7 @@ export default function TextModPage() {
                       variant="secondary"
                       label={showTextMod ? "Hide" : "Show"}
                       onClick={() => {
-                        getModTextmod(id!).then((data) => {
+                        getModText(id!.toString()).then((data) => {
                           if (data) {
                             setModText(data);
                           }
