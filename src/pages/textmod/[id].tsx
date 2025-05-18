@@ -6,11 +6,13 @@ import { ModModal } from "@/components/ModModal";
 import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
-import { getModTextmod, supabase } from "@/utils/supabase";
-import { User, useUser } from "@supabase/auth-helpers-react";
+import { getModTextmod, supabaseAtom } from "@/utils/supabase";
+import { SupabaseClient, User, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useAtom } from "jotai";
+import { supabase } from "@supabase/auth-ui-shared";
 
 const findUserVote = (
   user?: User,
@@ -22,6 +24,7 @@ const findUserVote = (
 };
 
 const handleVoteClick = async (
+  supabase: SupabaseClient<Database>,
   modId: number,
   isUpvote: boolean,
   refetch: () => void,
@@ -77,6 +80,7 @@ export default function TextModPage() {
   const user = useUser();
   const [modText, setModText] = useState<string>();
   const [copyText, setCopyText] = useState("Copy");
+  const [supabase] = useAtom(supabaseAtom);
 
   console.log("data", data);
 
@@ -181,7 +185,7 @@ export default function TextModPage() {
                       onClick={() => {
                         user !== null &&
                           id &&
-                          handleVoteClick(id, true, refetch, userVote);
+                          handleVoteClick(supabase, id, true, refetch, userVote);
                       }}>
                       ↑{data.votes.filter((v) => v.upvote).length}
                     </Text>
@@ -194,7 +198,7 @@ export default function TextModPage() {
                       onClick={() => {
                         user !== null &&
                           id &&
-                          handleVoteClick(id, false, refetch, userVote);
+                          handleVoteClick(supabase, id, false, refetch, userVote);
                       }}>
                       ↓{data.votes.filter((v) => !v.upvote).length}
                     </Text>

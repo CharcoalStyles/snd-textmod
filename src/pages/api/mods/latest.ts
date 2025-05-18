@@ -1,7 +1,7 @@
 import { TextmodCardProps } from "@/components";
+import { getMods } from "@/utils/dynamo";
 import { generateSupabaseClient, sbToTextmods } from "@/utils/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getCachedTextmod, setCachedTextmod } from "@/utils/dynamo";
 
 type ResponseData = Array<TextmodCardProps> | { message: string };
 
@@ -9,22 +9,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const table = "mods";
-  const tableKey = `${table}-latest`;
-  const items = await getCachedTextmod(tableKey);
-
-  if (items && items.length > 0) {
-    console.log("Sending data 1");
-    // @ts-ignore
-    return res.status(200).json(items);
-  }
-
-  console.log("Getting live data");
   const supabase = generateSupabaseClient();
 
   let { error, data } = await supabase
-    .from(table)
-    .select("*,mod_votes(*), mod_comments(count), user_id(username)")
+    .from("mods")
+    .select("id, mod_votes(*), mod_comments(count), user_id(username)")
     .order("created_at", { ascending: false })
     .limit(10);
 
@@ -33,9 +22,21 @@ export default async function handler(
     return res.status(500).json({ message: "Error fetching records" });
   }
 
-  const textmods = sbToTextmods(data);
+  const x = await getMods(data.map((d) => d.id.toString()));
 
-  await Promise.all(textmods.map((d, i) => setCachedTextmod(tableKey, d, i)));
+  const textmods = sbToTextmods(
+    x.map((mod) => {
+      const otherData = data.find((d) => d.id === mod!.id);
+      if (otherData) {
+        return {
+          ...mod,
+          mod_comments: otherData.mod_comments,
+          mod_votes: otherData.mod_votes,
+          user_id: otherData.user_id,
+        };
+      }
+    })
+  );
 
   return res.status(200).json(textmods);
 }

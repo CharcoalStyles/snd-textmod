@@ -20,9 +20,17 @@ export default $config({
       ttl: "ttl",
     });
 
+    const modCache = new sst.aws.Dynamo("ModCache", {
+      fields: {
+        type: "string",
+        id: "string",
+      },
+      primaryIndex: { hashKey: "type", rangeKey: "id" },
+    });
+
     new sst.aws.Nextjs("SndTextmodSite", {
       invalidation: false,
-      link: [dbCache],
+      link: [dbCache, modCache],
     });
   },
 });

@@ -9,6 +9,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
+    "ModCache": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "SndTextmodSite": {
       "type": "sst.aws.Nextjs"
       "url": string
