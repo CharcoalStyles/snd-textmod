@@ -12,3 +12,4 @@ A little site for people to post and find text mods for [Slice & Dice](https://t
 - [Jotai](https://jotai.org/)
 - [TanStack Query](https://tanstack.com/query)
 - [SST](https://sst.dev/)
+- [Bun](https://bun.sh/)
