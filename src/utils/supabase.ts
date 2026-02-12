@@ -47,8 +47,6 @@ export const sbToTextmods = (data: any) => {
     const realMod = row;
     const { mod, ...rest } = realMod;
 
-    console.log({ rest });
-
     const fix = {
       //@ts-ignore
       commentCount: Object.hasOwn(realMod, "mod_comments")

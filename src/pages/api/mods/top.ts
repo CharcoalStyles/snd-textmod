@@ -14,12 +14,10 @@ export default async function handler(
   const items = await getCachedTextmod(tableKey);
 
   if (items && items.length > 0) {
-    console.log("Sending data 1");
     // @ts-ignore
     return res.status(200).json(items);
   }
 
-  console.log("Getting live data");
   const supabase = generateSupabaseClient();
 
   // const { data, error } = await supabase

@@ -96,8 +96,7 @@ export const ModModal = ({
                   const { data, error } = await supabase.storage
                     .from("images")
                     .upload(`${user.id}/${filename}`, mainImage);
-                  console.log(data);
-                  console.log(error);
+                  console.error(error);
 
                   if (error) {
                     setError(error.message);

@@ -79,8 +79,6 @@ export default function TextModPage() {
   const [modText, setModText] = useState<string>();
   const [copyText, setCopyText] = useState("Copy");
 
-  console.log("data", data);
-
   const userVote = findUserVote(sbUser, data?.votes);
   const { user } = sbUser;
 

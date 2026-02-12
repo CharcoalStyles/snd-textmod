@@ -4,7 +4,6 @@ import { Resource } from "sst";
 import { compress, decompress } from "brotli-unicode";
 
 export async function getCachedTextmod(key: string) {
-  console.log("Getting cached data from " + key);
   const client = new DynamoDBClient();
 
   // get all items that have the same table name
@@ -42,7 +41,6 @@ export async function getCachedTextmod(key: string) {
     })
   );
 
-  console.log("Got cached data");
   return data;
 }
 
@@ -51,13 +49,10 @@ export async function setCachedTextmod(
   data: TextmodCardProps & { mod: string },
   index: number
 ) {
-  console.log("Setting cached data");
   const client = new DynamoDBClient();
 
   // create ttl for 1 hour, in seconds
   const ttl = Math.floor(Date.now() / 1000) + 60 * 60;
-
-  console.log("start Compressing");
 
   try {
     const modified = { ...data };
@@ -65,11 +60,6 @@ export async function setCachedTextmod(
     const d = await compress(input);
     const full = data.mod.length;
     const compressed = d.toString().length;
-    console.log(
-      `Compressed data comparison: ${full} to ${compressed} (${Math.round(
-        (compressed / full) * 100
-      )}%)`
-    );
 
     modified.mod = d;
 
@@ -85,11 +75,10 @@ export async function setCachedTextmod(
 
     await client.send(command);
   } catch (e) {
-    console.log("Error compressing");
-    console.log(index);
-    console.log(data.name);
-    console.log(e);
+    console.group("Error compressing");
+    console.error(index);
+    console.error(data.name);
+    console.error(e);
+    console.groupEnd();
   }
-
-  console.log("done", index);
 }

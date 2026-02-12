@@ -26,7 +26,6 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
 
   const [_, ...q] = queryKey
   const stringQuery = q.map((o) => `${o[0]}=${o[1]}`).join("&");
-  console.log("key", stringQuery);
 
   const { data, error, isLoading, refetch } = useQuery({
     enabled: true,

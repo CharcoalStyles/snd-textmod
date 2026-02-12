@@ -17,8 +17,6 @@ export const useTextModsCalculated = (table: UseTextModsCalculatedProps) => {
         throw new Error("No data found");
       }
 
-      console.log({data})
-
       const fixed = data.data.map((row: TextmodCardProps) => {
         return {
           ...row,
