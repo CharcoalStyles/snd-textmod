@@ -1,6 +1,6 @@
 import { Button, Modal, Text, TextArea } from "@/components/ui";
 import { supabaseAtom } from "@/utils/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
 import { useAtom } from "jotai";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,7 +20,7 @@ type CommentProps = {
 };
 
 export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
-  const user = useUser();
+  const { user } = useUser();
   const [supabase] = useAtom(supabaseAtom);
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState("");

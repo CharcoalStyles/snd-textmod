@@ -1,69 +1,56 @@
-import { Database } from "@/utils/schema";
 import { supabaseAtom } from "@/utils/supabase";
-import { User } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { atom, useAtom } from "jotai";
-
-const userAtom = atom<User | null>(null);
-const userDataAtom = atom<Array<
-  Database["public"]["Tables"]["profiles"]["Row"]
-> | null>(null);
+import {useAtom } from "jotai";
 
 export const useUser = () => {
   const [supabase] = useAtom(supabaseAtom);
   const queryClient = useQueryClient();
-  const [currentUser, setCurrentUser] = useAtom(userAtom);
-  const [userData, setUserData] = useAtom(userDataAtom);
-  const { data, error, isLoading, refetch } = useQuery({
-    enabled: true,
-    queryKey: ["userData", currentUser?.id ?? ""],
+
+  const { data: session, isLoading: authLoading } = useQuery({
+    queryKey: ['session'],
+    queryFn: () => supabase.auth.getSession().then(res => res.data.session),
+    refetchOnWindowFocus: false,
+  });
+
+  const user = session?.user ?? null;
+
+  const { data: userData, error, isLoading: dataLoading } = useQuery({
+    enabled: !!user,
+    queryKey: ['userData', user ? user.id : 'no-user'],
     queryFn: async () => {
-      if (userData && userData.length > 0) {
-        return userData;
-      }
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-        throw error;
-      }
+      if (!user) return null;
 
-      if (user === null) {
-        console.warn("No user found");
-        return null;
-      }
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-      setCurrentUser(user);
-
-      const { data, error: dbError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id);
-
-      if (dbError) {
-        console.error("Error fetching records:", dbError);
-        throw dbError;
-      }
-
-      
-      setUserData(data);
+      if (error) throw error;
       return data;
     },
   });
 
+  if (!user) {
+    return {
+      user: null,
+      userData: null,
+      error: null,
+      isLoading: authLoading,
+      refetch: () => queryClient.invalidateQueries({ queryKey: ['session'] }),
+      clear: () => queryClient.setQueryData(['session'], null),
+    };
+  }
+
   return {
-    user: currentUser,
-    userData: data === null ? undefined : data,
-    error: error,
-    isLoading: isLoading && currentUser === null && userData === null,
-    refetch: refetch,
+    user,
+    userData: userData || undefined,
+    error,
+    isLoading: authLoading || (dataLoading && !userData),
+    refetch: () => queryClient.invalidateQueries({ queryKey: ['userData'] }),
     clear: () => {
-      if (currentUser) {
-        queryClient.invalidateQueries({ queryKey: [currentUser.id] });
-        setCurrentUser(null);
-      }
+      queryClient.removeQueries({ queryKey: ['userData'] });
+      queryClient.setQueryData(['session'], null);
     },
   };
 };
