@@ -3,7 +3,7 @@ import { Button, Modal, Text } from "./ui";
 import { useAtom } from "jotai";
 import { supabaseAtom } from "@/utils/supabase";
 import { ModForm, TextmodFormData } from "./ModForm";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
 import { Database } from "@/utils/schema";
 
 type ModModalProps = {
@@ -26,7 +26,7 @@ export const ModModal = ({
   title,
 }: ModModalProps) => {
   const [supabase] = useAtom(supabaseAtom);
-  const user = useUser();
+  const { user } = useUser();
 
   const [isSaving, setIsSaving] = useState(false);
 

@@ -40,7 +40,7 @@ const NewUserPage: React.FC = () => {
       setLoading(true);
       timeoutRef.current = setTimeout(() => {
 
-        if (user === null || (userData !== undefined && userData.length > 0)) {
+        if (user === null || (userData !== undefined)) {
 
           router.push("/");
         } else {
@@ -51,7 +51,7 @@ const NewUserPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, user, userData]);
 
-  if (loading || !user || userData === undefined || userData.length > 0) {
+  if (loading || !user || userData === undefined) {
     return (
       <div
         data-testid="loader"

@@ -23,21 +23,19 @@ export const UserBadge = () => {
       clearTimeout(timeoutRef.current);
     }
 
-    if (isLoading || !userData || userData.length === 0) {
+    if (isLoading || !userData) {
       timeoutRef.current = setTimeout(() => {
         refetch();
       }, 500);
       return;
     }
 
-    if (userData) {
+    if (userData && userData.username) {
       setLoading(false);
-      setLabel(`${userData[0].username}`);
+      setLabel(`${userData.username}`);
     } else {
       if (user) {
         router.push("/new-user");
-      } else {
-        refetch();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +69,7 @@ export const UserBadge = () => {
             noBorder
             onClick={() => {
               router.push(
-                `/user/${userData![0].username.toLowerCase().replace(" ", "-")}`
+                `/user/${userData!.username.toLowerCase().replace(" ", "-")}`
               );
             }}
           />

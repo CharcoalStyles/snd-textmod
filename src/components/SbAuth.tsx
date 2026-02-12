@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { MagicLink } from "@supabase/auth-ui-react";
-import { ThemeSupa, ViewType } from "@supabase/auth-ui-shared";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useUser } from "@/hooks/useUser";
 import { supabaseAtom } from "@/utils/supabase";
 import { useAtom } from "jotai";

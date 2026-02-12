@@ -2,9 +2,6 @@
 import { Button, Input, Text, TextArea } from "./ui";
 import { useEffect, useState } from "react";
 import FileInput from "./ui/FileInput";
-import { useAtom } from "jotai";
-import { supabaseAtom } from "@/utils/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
 import { Loader } from "./Loader";
 
 export type TextmodFormData = {

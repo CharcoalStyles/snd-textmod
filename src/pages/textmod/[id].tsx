@@ -7,18 +7,18 @@ import { Button, Modal, Text } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
 import { getModTextmod, supabase } from "@/utils/supabase";
-import { User, useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+  
 const findUserVote = (
-  user?: User,
+  user: ReturnType<typeof useUser>,
   votes?: Array<Database["public"]["Tables"]["mod_votes"]["Row"]>
 ) => {
-  if (!user || !votes) return undefined;
+  if (!user?.user || !votes) return undefined;
 
-  return votes.find((v) => v.user_id === user.id);
+  return votes.find((v) => v.user_id === user.user.id);
 };
 
 const handleVoteClick = async (
@@ -74,13 +74,14 @@ export default function TextModPage() {
   const { data, error, isLoading, refetch } = useTextMod(id);
   const [showTextMod, setShowTextMod] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const user = useUser();
+  const sbUser = useUser();
   const [modText, setModText] = useState<string>();
   const [copyText, setCopyText] = useState("Copy");
 
   console.log("data", data);
 
-  const userVote = findUserVote(user !== null ? user : undefined, data?.votes);
+  const userVote = findUserVote(sbUser, data?.votes);
+  const { user } = sbUser;
 
   return (
     <main className="h-screen min-h-screen w-screen contain-content">
@@ -176,10 +177,10 @@ export default function TextModPage() {
                       fontSize="3xl"
                       variant="success"
                       fontType="heading"
-                      onHover={user !== null}
+                      onHover={sbUser !== null}
                       scale
                       onClick={() => {
-                        user !== null &&
+                        sbUser !== null &&
                           id &&
                           handleVoteClick(id, true, refetch, userVote);
                       }}>
@@ -189,10 +190,10 @@ export default function TextModPage() {
                       fontSize="3xl"
                       variant="danger"
                       fontType="heading"
-                      onHover={user !== null}
+                      onHover={sbUser !== null}
                       scale
                       onClick={() => {
-                        user !== null &&
+                        sbUser !== null &&
                           id &&
                           handleVoteClick(id, false, refetch, userVote);
                       }}>
