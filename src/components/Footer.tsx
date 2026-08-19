@@ -34,7 +34,7 @@ export const Footer = () => (
     </Link>
     |
     <Text variant="black" >
-      v2.0(r)
+      v2.0.2-r
     </Text>
   </footer>
 );

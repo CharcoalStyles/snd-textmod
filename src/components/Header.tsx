@@ -13,7 +13,7 @@ export const Header = () => {
   return (
     <div className="sticky">
       <div className=" flex flex-row p-4 h-32 z-40">
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between">
           <div className="flex-grow">
             <Link
               className="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
