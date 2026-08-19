@@ -1,6 +1,7 @@
 import { supabaseAtom } from "@/utils/supabase";import { User } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {useAtom } from "jotai";
+import { useEffect } from "react";
 
 export const useUser = () => {
   const [supabase] = useAtom(supabaseAtom);
@@ -11,6 +12,13 @@ export const useUser = () => {
     queryFn: () => supabase.auth.getSession().then(res => res.data.session),
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      queryClient.setQueryData(['session'], session);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, [supabase, queryClient]);
 
   const user = session?.user ?? null;
 
@@ -24,7 +32,7 @@ export const useUser = () => {
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data;

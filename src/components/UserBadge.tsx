@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useUser } from "@/hooks/useUser";
 import { useAtom } from "jotai";
 import { supabaseAtom } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { Loader } from "./Loader";
 
 export const UserBadge = () => {

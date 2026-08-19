@@ -42,7 +42,7 @@ export function SbAuth({ isOpen, onClose }: SbAuthProps) {
                 }
               }
             }}
-            redirectTo="new-user"
+            redirectTo={`${window.location.origin}/new-user`}
             providers={[]}
           />
         </div>
