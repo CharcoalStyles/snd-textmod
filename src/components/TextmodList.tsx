@@ -35,7 +35,7 @@ const QueryList = ({ lastDate, limit, orderBy, userName }: QueryProps) => {
   });
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {isLoading && <Loader />}
       {error && <p>Error: {error.message}</p>}
       {data &&
@@ -64,7 +64,7 @@ const CacheList = ({ cacheUrl }: { cacheUrl: string }) => {
     },
   });
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {isLoading && <Loader />}
       {error && <p>Error: {error.message}</p>}
       {data &&

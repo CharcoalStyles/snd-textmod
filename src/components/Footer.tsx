@@ -2,12 +2,12 @@ import { Text } from "@/components/ui";
 import Link from "next/link";
 
 export const Footer = () => (
-  <footer className="fixed w-screen h-min-6 px-4 bg-secondary z-50 bottom-0 flex flex-row gap-2 justify-center">
+  <footer className="fixed w-screen h-min-6 px-4 bg-secondary z-50 bottom-0 flex flex-row gap-1 md:gap-2 justify-center">
     <Link
       href="https://www.charcoalstyles.com"
       data-umami-event="charcoalstyles">
       <Text variant="black" onHover showHoverable>
-        Made by Charcoal
+        Charcoal
       </Text>
     </Link>
     |
@@ -34,7 +34,7 @@ export const Footer = () => (
     </Link>
     |
     <Text variant="black" >
-      v2.0
+      v2.0(r)
     </Text>
   </footer>
 );

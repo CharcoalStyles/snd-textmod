@@ -55,7 +55,7 @@ export const Header = () => {
                 <Button
                   variant="primary"
                   label="Login"
-                  size="large"
+                  size="medium"
                   className="mr-4"
                   onClick={() => {
                     setShowAuth(true);

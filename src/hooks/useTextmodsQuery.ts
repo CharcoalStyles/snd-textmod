@@ -64,7 +64,7 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
       } else if (orderBy === "top") {
         query = query.order("mod_votes", { ascending: false });
       } else if (orderBy === "lastUpdated") {
-        query = query.order("last_modified", { ascending: false });
+        query = query.order("last_modified", { ascending: false, nullsFirst: false });
       }
 
       const { data, error } = await query.limit(limit);

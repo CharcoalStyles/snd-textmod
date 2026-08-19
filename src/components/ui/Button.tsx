@@ -160,7 +160,7 @@ export const Button = ({
       data-testid={dataTestId}
       disabled={disabled}
       className={clsx([
-        "inline-flex items-center h-min justify-center rounded-md font-body transition-all duration-200",
+        "inline-flex items-center h-min justify-center font-body transition-all duration-200",
         noBorder ? "" : "border",
         getStatusClasses(),
         getButtonSizeClasses(),

@@ -4,6 +4,7 @@ import { useUser } from "@/hooks/useUser";
 import { useAtom } from "jotai";
 import Link from "next/link";
 import { useState } from "react";
+import { dateFormatter } from "@/utils/date";
 
 type CommentProps = {
   modId: number;
@@ -39,13 +40,13 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
             }}
           />
         </div>
-        <div className="flex flex-row gap-2 justify-between flex-wrap">
+        <div className="flex flex-row gap-x-4 justify-between flex-wrap">
           {comments &&
             comments.map((c) => (
               <div
                 key={c.id}
-                className="basis-72 max-w-96 flex-grow flex flex-col border border-text p-2 my-2">
-                <div className="flex flex-row justify-between">
+                className="w-1/3 flex-grow flex flex-col justify-between border-2 border-text px-4 py-2 my-2">
+                <div className="flex flex-row justify-between mb-4">
                   <div>
                     {c.comment.split("~n").map((l) => (
                       <Text key={l} fontSize="xl" fontType="body">
@@ -87,7 +88,7 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
                       {c.creator.username}
                     </Link>
                   </Text>
-                  <Text fontType="body">{c.createdDate.toDateString()}</Text>
+                  <Text fontType="body">{dateFormatter.format(c.createdDate)}</Text>
                 </div>
               </div>
             ))}
