@@ -68,9 +68,11 @@ export const UserBadge = () => {
             fullWidth
             noBorder
             onClick={() => {
-              router.push(
-                `/user/${userData!.username.toLowerCase().replace(" ", "-")}`
-              );
+              if (userData?.username) {
+                router.push(
+                  `/user/${userData.username.toLowerCase().replace(" ", "-")}`
+                );
+              }
             }}
           />
           <Button
