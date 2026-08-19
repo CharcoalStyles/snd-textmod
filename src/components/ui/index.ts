@@ -6,3 +6,4 @@ export * from "./Hero";
 export * from "./Text";
 export * from "./TextArea";
 export * from "./Modal";
+export * from "./TagChip";

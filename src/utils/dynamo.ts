@@ -1,7 +1,13 @@
 import { TextmodCardProps } from "@/components";
-import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  ScanCommand,
+  PutItemCommand,
+  GetItemCommand,
+} from "@aws-sdk/client-dynamodb";
 import { Resource } from "sst";
 import { compress, decompress } from "brotli-unicode";
+import { gzipSync, gunzipSync } from "zlib";
 
 export async function getCachedTextmod(key: string) {
   console.log("Getting cached data from " + key);
@@ -92,4 +98,39 @@ export async function setCachedTextmod(
   }
 
   console.log("done", index);
+}
+
+export async function getCachedModText(id: number) {
+  const client = new DynamoDBClient();
+
+  const { Item } = await client.send(
+    new GetItemCommand({
+      TableName: Resource.ModCache.name,
+      Key: { type: { S: "mod" }, id: { S: id.toString() } },
+    })
+  );
+
+  const modData = Item?.modData?.S;
+  if (!modData) {
+    return null;
+  }
+
+  const base64 = JSON.parse(modData) as string;
+  return gunzipSync(Buffer.from(base64, "base64")).toString();
+}
+
+export async function setCachedModText(id: number, mod: string) {
+  const client = new DynamoDBClient();
+  const base64 = gzipSync(Buffer.from(mod)).toString("base64");
+
+  await client.send(
+    new PutItemCommand({
+      TableName: Resource.ModCache.name,
+      Item: {
+        type: { S: "mod" },
+        id: { S: id.toString() },
+        modData: { S: JSON.stringify(base64) },
+      },
+    })
+  );
 }

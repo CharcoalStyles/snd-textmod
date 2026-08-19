@@ -24,7 +24,7 @@ export default async function handler(
 
   let { error, data } = await supabase
     .from(table)
-    .select("*,mod_votes(*), mod_comments(count), user_id(username)")
+    .select("*,mod_votes(*), mod_comments(count), user_id(username), mod_tags(tag)")
     .order("created_at", { ascending: false })
     .limit(10);
 

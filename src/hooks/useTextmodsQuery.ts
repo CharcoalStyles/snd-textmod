@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 
 export type TextmodsQuery = {
   userName?: string;
-  orderBy?: "newest" | "oldest" | "top";
+  orderBy?: "newest" | "oldest" | "top" | "lastUpdated";
   limit?: number;
   lastDate?: Date;
 };
@@ -34,7 +34,9 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
     queryFn: async () => {
       let query = supabase
         .from("mods")
-        .select("*,mod_votes(*), mod_comments(count), user_id(username)");
+        .select(
+          "*,mod_votes(*), mod_comments(count), user_id(username), mod_tags(tag)"
+        );
 
       if (userName) {
         const { data, error } = await supabase
@@ -61,6 +63,8 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
         query = query.order("created_at", { ascending: true });
       } else if (orderBy === "top") {
         query = query.order("mod_votes", { ascending: false });
+      } else if (orderBy === "lastUpdated") {
+        query = query.order("last_modified", { ascending: false, nullsFirst: false });
       }
 
       const { data, error } = await query.limit(limit);
@@ -82,6 +86,8 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
           id: mod.id,
           commentCount: mod.mod_comments[0].count,
           createdDate: new Date(mod.created_at),
+          // @ts-ignore
+          lastModified: mod.last_modified ? new Date(mod.last_modified) : null,
           creator: {
             name: creatorName,
             slug: creatorSlug,
@@ -91,6 +97,8 @@ export const useTextmodsQuery = (props: UseTextmodsQueryProps) => {
           downvotes: mod.mod_votes.filter(({ upvote }) => !upvote).length,
           name: mod.name,
           mod: mod.mod,
+          // @ts-ignore
+          tags: mod.mod_tags?.map((t) => t.tag) || [],
           // @ts-ignore
           upvotes: mod.mod_votes.filter(({ upvote }) => upvote).length,
         } as TextmodCardProps;

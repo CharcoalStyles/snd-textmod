@@ -30,6 +30,15 @@ export const Header = () => {
           </div>
           {!isLoading && (
             <div className="flex justify-end content-center flex-shrink">
+              <Button
+                variant="white"
+                size="medium"
+                label="Search"
+                className="mr-4"
+                onClick={() => {
+                  window.location.href = "/search";
+                }}
+              />
               {user ? (
                 <div className="ml-2 flex flex-row gap-4">
                   <Button
@@ -46,7 +55,7 @@ export const Header = () => {
                 <Button
                   variant="primary"
                   label="Login"
-                  size="large"
+                  size="medium"
                   className="mr-4"
                   onClick={() => {
                     setShowAuth(true);

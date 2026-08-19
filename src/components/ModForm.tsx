@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button, Input, Text, TextArea } from "./ui";
+import { Button, Input, Text, TextArea, TagChip } from "./ui";
 import { useEffect, useState } from "react";
 import FileInput from "./ui/FileInput";
 import { Loader } from "./Loader";
+import { ALL_TAGS, Tag } from "@/utils/tags";
 
 export type TextmodFormData = {
   id?: number;
@@ -13,11 +14,13 @@ export type TextmodFormData = {
   mainImageUrl?: string;
   secondaryImages?: File[];
   secondaryImageUrls?: string[];
+  tags?: Tag[];
 };
 
 type ModFormProps = {
   preFill?: Omit<TextmodFormData, "mod">;
   mod?: string;
+  tags?: Tag[];
   onSubmit: (data: TextmodFormData) => void;
   onCancel: () => void;
   disabled?: boolean;
@@ -30,6 +33,7 @@ export const ModForm = ({
   onSubmit,
   preFill,
   mod,
+  tags,
   outerError,
 }: ModFormProps) => {
   const [formData, setFormData] = useState<TextmodFormData>({
@@ -38,6 +42,7 @@ export const ModForm = ({
     mod: mod || "",
     mainImage: undefined,
     secondaryImages: [],
+    tags: tags || [],
     ...preFill,
   });
   const [error, setError] = useState<string | null>(null);
@@ -164,6 +169,26 @@ export const ModForm = ({
                 }}
               />
             )}
+            <div className="flex flex-col my-2">
+              <Text>Available Tags</Text>
+              <div className="flex flex-row gap-2 flex-wrap">
+                {ALL_TAGS.map((tag) => (
+                  <TagChip
+                    key={tag}
+                    tag={tag}
+                    selected={formData.tags?.some((t) => t === tag)}
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        tags: prev.tags?.includes(tag)
+                          ? prev.tags.filter((t) => t !== tag)
+                          : [...(prev.tags || []), tag],
+                      }));
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-row gap-2 mt-4">

@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Text } from "@/components/ui";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { supabaseAtom } from "@/utils/supabase";
 
 const NewUserPage: React.FC = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(true);
   const [supabase] = useAtom(supabaseAtom);
-  const { user, userData, isLoading, error } = useUser();
-  const [ucOne, setUcOne] = useState(true);
+  const { user, userData, isLoading, error, refetch } = useUser();
   const [submitError, setSubmitError] = useState<string>();
 
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -27,27 +24,23 @@ const NewUserPage: React.FC = () => {
   }, [error]);
 
   useEffect(() => {
-    if (!isLoading) {
-      if (ucOne) {
-        setUcOne(false);
-        return;
-      }
+    if (isLoading) return;
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      setLoading(true);
-      timeoutRef.current = setTimeout(() => {
-
-        if (user === null || (userData !== undefined)) {
-
-          router.push("/");
-        } else {
-          setLoading(false);
-        }
-      }, 500);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
+
+    timeoutRef.current = setTimeout(() => {
+      if (user === null || userData !== undefined) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
+    }, 500);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, user, userData]);
 
@@ -104,7 +97,7 @@ const NewUserPage: React.FC = () => {
               console.error("Error inserting user:", status);
               return;
             }
-            queryClient.invalidateQueries({ queryKey: [user.id] });
+            refetch();
             setLoading(false);
             router.push("/");
           });

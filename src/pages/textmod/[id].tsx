@@ -3,18 +3,26 @@ import { Header, Loader } from "@/components";
 import { Comments } from "@/components/Comments";
 import { Footer } from "@/components/Footer";
 import { ModModal } from "@/components/ModModal";
-import { Button, Modal, Text } from "@/components/ui";
+import { Button, Modal, Text, TagChip } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
-import { getModTextmod, supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
+import { getModText } from "@/utils/modText";
 import { useUser } from "@/hooks/useUser";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-  
+import { useEffect, useMemo, useState } from "react";
+import {
+  Calendar,
+  CalendarClock,
+  ArrowBigUp,
+  ArrowBigDown,
+} from "lucide-react";
+import { dateFormatter } from "@/utils/date";
+
 const findUserVote = (
   user: ReturnType<typeof useUser>,
-  votes?: Array<Database["public"]["Tables"]["mod_votes"]["Row"]>
+  votes?: Array<Database["public"]["Tables"]["mod_votes"]["Row"]>,
 ) => {
   if (!user?.user || !votes) return undefined;
 
@@ -25,7 +33,7 @@ const handleVoteClick = async (
   modId: number,
   isUpvote: boolean,
   refetch: () => void,
-  vote?: Database["public"]["Tables"]["mod_votes"]["Row"]
+  vote?: Database["public"]["Tables"]["mod_votes"]["Row"],
 ) => {
   if (vote) {
     // if the user has already voted this vote, delete it
@@ -73,12 +81,40 @@ export default function TextModPage() {
     : undefined;
   const { data, error, isLoading, refetch } = useTextMod(id);
   const [showTextMod, setShowTextMod] = useState(false);
+  const [showSplitTextMod, setShowSplitTextMod] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const sbUser = useUser();
   const [modText, setModText] = useState<string>();
-  const [copyText, setCopyText] = useState("Copy");
+  const [copyText, setCopyText] = useState("Copy Full TextMod");
 
-  console.log("data", data);
+  useEffect(() => {
+    if (!id) return;
+    getModText(id).then((text) => {
+      setModText(text ?? "");
+    });
+  }, [id]);
+
+  // Slice & Dice's paste box has a size limit, so split large mods into
+  // ≤50,000 character chunks on comma boundaries for separate copying.
+  const splitModText = useMemo(() => {
+    if (!modText) return [];
+    const parts = modText
+      .split(",")
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
+    const chunks: string[] = [];
+    let current = "";
+    parts.forEach((part) => {
+      if (current.length + part.length > 50_000) {
+        chunks.push(current);
+        current = part;
+      } else {
+        current += (current ? "," : "") + part;
+      }
+    });
+    if (current) chunks.push(current);
+    return chunks;
+  }, [modText]);
 
   const userVote = findUserVote(sbUser, data?.votes);
   const { user } = sbUser;
@@ -96,15 +132,11 @@ export default function TextModPage() {
           {error && <p>Error: {error.message}</p>}
           {data && (
             <>
-              <div className="flex flex-row justify-between">
-                <div>
-                  <Text
-                    fontSize="4xl"
-                    scale
-                    variant="primary"
-                    fontType="heading">
+              <div className="flex flex-row justify-between items-start">
+                <div className="flex flex-col">
+                  <p className="text-primary  text-2xl md:text-4xl font-heading leading-10 my-2 md:my-6">
                     {data.name}
-                  </Text>
+                  </p>
                   <div className="-mt-3 md:-mt-5 flex flex-row gap-2">
                     <Text fontSize="3xl" scale>
                       By:
@@ -120,131 +152,112 @@ export default function TextModPage() {
                       </Text>
                     </Link>
                   </div>
-                </div>
-                <div className="flex flex-col justify-between text-right mt-5">
-                  <div>
-                    <Text scale fontType="body">
-                      Added: {data.createdDate.toDateString()}
-                    </Text>
-                    <div className="flex flex-row justify-between">
-                      {user && user.id === data.creator.id && (
-                        <>
-                          <Text
-                            variant="accent"
-                            showHoverable
-                            onHover
-                            onClick={() => {
-                              getModTextmod(id!).then((data) => {
-                                if (data) {
-                                  setModText(data);
-                                }
-                              });
-                              setShowEditModal(true);
-                            }}
-                            fontType="body">
-                            Edit
-                          </Text>
-
-                          <Text
-                            variant="danger"
-                            showHoverable
-                            onHover
-                            onClick={() => {
-                              supabase
-                                .from("mods")
-                                .delete()
-                                .eq("id", data.id)
-                                .then(({ error }) => {
-                                  if (error) {
-                                    console.error(
-                                      "Error deleting comment:",
-                                      error
-                                    );
-                                  } else {
-                                    router.push("/");
-                                  }
-                                });
-                            }}
-                            fontType="body">
-                            Delete
-                          </Text>
-                        </>
-                      )}
+                  <div className="flex flex-row gap-3 mt-1">
+                    <div className="flex flex-row items-center gap-1 text-text">
+                      <Calendar className="w-4 h-4 shrink-0" />
+                      <Text fontSize="base" fontType="body">
+                        {dateFormatter.format(data.createdDate)}
+                      </Text>
                     </div>
+                    {data.lastModified && (
+                      <div className="flex flex-row items-center gap-1 text-text">
+                        <CalendarClock className="w-4 h-4 shrink-0" />
+                        <Text fontSize="base" fontType="body">
+                          {dateFormatter.format(data.lastModified)}
+                        </Text>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex flex-row justify-end gap-2">
+                </div>
+                <div className="flex flex-row items-end gap-3">
+                  <div
+                    className="flex flex-row items-center gap-1 text-green-500 hover:cursor-pointer"
+                    onClick={() => {
+                      sbUser !== null &&
+                        id &&
+                        handleVoteClick(id, true, refetch, userVote);
+                    }}>
+                    <ArrowBigUp className="w-5 h-5 md:w-8 md:h-8 shrink-0" />
                     <Text
                       fontSize="3xl"
+                      scale
                       variant="success"
-                      fontType="heading"
-                      onHover={sbUser !== null}
-                      scale
-                      onClick={() => {
-                        sbUser !== null &&
-                          id &&
-                          handleVoteClick(id, true, refetch, userVote);
-                      }}>
-                      ↑{data.votes.filter((v) => v.upvote).length}
+                      fontType="heading">
+                      {data.votes.filter((v) => v.upvote).length}
                     </Text>
+                  </div>
+                  <div
+                    className="flex flex-row items-center gap-1 text-red-500 hover:cursor-pointer"
+                    onClick={() => {
+                      sbUser !== null &&
+                        id &&
+                        handleVoteClick(id, false, refetch, userVote);
+                    }}>
+                    <ArrowBigDown className="w-5 h-5 md:w-8 md:h-8 shrink-0" />
                     <Text
                       fontSize="3xl"
-                      variant="danger"
-                      fontType="heading"
-                      onHover={sbUser !== null}
                       scale
-                      onClick={() => {
-                        sbUser !== null &&
-                          id &&
-                          handleVoteClick(id, false, refetch, userVote);
-                      }}>
-                      ↓{data.votes.filter((v) => !v.upvote).length}
+                      variant="danger"
+                      fontType="heading">
+                      {data.votes.filter((v) => !v.upvote).length}
                     </Text>
                   </div>
+                  {user && user.id === data.creator.id && (
+                    <div className="flex flex-row gap-2 mt-1">
+                      <Text
+                        variant="accent"
+                        fontSize="base"
+                        showHoverable
+                        onHover
+                        onClick={() => {
+                          setShowEditModal(true);
+                        }}
+                        fontType="body">
+                        Edit
+                      </Text>
+
+                      <Text
+                        variant="danger"
+                        fontSize="base"
+                        showHoverable
+                        onHover
+                        onClick={() => {
+                          supabase
+                            .from("mods")
+                            .delete()
+                            .eq("id", data.id)
+                            .then(({ error }) => {
+                              if (error) {
+                                console.error("Error deleting comment:", error);
+                              } else {
+                                router.push("/");
+                              }
+                            });
+                        }}
+                        fontType="body">
+                        Delete
+                      </Text>
+                    </div>
+                  )}
                 </div>
               </div>
-              <hr className="my-2" />
-              <div className="flex flex-col md:flex-row text-center gap-4">
-                <div className="flex-grow text-left">
-                  <Text fontSize="xl" fontType="body">
-                    {data.description}
-                  </Text>
-                </div>
-                <div className="w-full md:flex-shrink md:w-fit">
-                  <div className="flex flex-row gap-2 justify-end">
-                    <Button
-                      variant="accent"
-                      label={copyText}
-                      onClick={() => {
-                        setCopyText("Loading!");
-                        getModTextmod(id!).then((data) => {
-                          if (data) {
-                            navigator.clipboard.writeText(data);
-                            setCopyText("Copied!");
-                          } else {
-                            setCopyText("Error");
-                          }
-                          setTimeout(() => {
-                            setCopyText("Copy");
-                          }, 2000);
-                        });
-                      }}
+              {data.tags.length > 0 && (
+                <div className="flex flex-row gap-2 flex-wrap mt-2">
+                  {data.tags.map((tag) => (
+                    <TagChip
+                      key={tag}
+                      tag={tag}
+                      onClick={() => router.push(`/search?tags=${tag}`)}
                     />
-                    <Button
-                      variant="secondary"
-                      label={showTextMod ? "Hide" : "Show"}
-                      onClick={() => {
-                        getModTextmod(id!).then((data) => {
-                          if (data) {
-                            setModText(data);
-                          }
-                        });
-                        setShowTextMod(!showTextMod);
-                      }}
-                    />
-                  </div>
+                  ))}
                 </div>
+              )}
+              <div className="my-2">
+                <Text fontSize="xl" fontType="body">
+                  {data.description}
+                </Text>
               </div>
-              <hr className="my-2" />
+
               {data.mainImage && (
                 <div className="flex flex-row justify-center">
                   <img
@@ -254,6 +267,65 @@ export default function TextModPage() {
                   />
                 </div>
               )}
+
+              <div className="w-full flex flex-col border-y-2 border-gray-400 p-4 mb-4">
+                <div className="flex flex-row gap-8">
+                  <Button
+                    variant="accent"
+                    label={copyText}
+                    fullWidth
+                    onClick={() => {
+                      navigator.clipboard.writeText(modText || "");
+                      setCopyText("Copied!");
+                      setTimeout(() => {
+                        setCopyText("Copy Full TextMod");
+                      }, 2000);
+                    }}
+                  />
+                  <Button
+                    variant="secondary"
+                    fullWidth
+                    label={
+                      showTextMod ? "Hide Full TextMod" : "Show Full TextMod"
+                    }
+                    onClick={() => {
+                      setShowTextMod(!showTextMod);
+                    }}
+                  />
+                  {splitModText.length > 1 && (
+                    <Button
+                      variant="basic"
+                      fullWidth
+                      label={
+                        showSplitTextMod
+                          ? "Hide Split TextMod Sections"
+                          : "Show Split TextMod"
+                      }
+                      onClick={() => {
+                        setShowSplitTextMod(!showSplitTextMod);
+                      }}
+                    />
+                  )}
+                </div>
+
+                {showSplitTextMod && (
+                  <div className="h-fit p-2 my-4 border-gray-600 overflow-auto w-full  border  scrollbar scrollbar-thumb-secondary transition-height">
+                    <div className="flex flex-col gap-2">
+                      {splitModText.map((part, i) => (
+                        <Button
+                          key={i}
+                          fullWidth
+                          variant="secondary"
+                          label={`Part ${i + 1} (${part.length} characters)`}
+                          onClick={() => {
+                            navigator.clipboard.writeText(part);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {id && (
                 <Comments
@@ -274,6 +346,7 @@ export default function TextModPage() {
                   mainImageUrl: data.mainImage ? data.mainImage : undefined,
                 }}
                 mod={modText}
+                tags={data.tags}
                 isOpen={showEditModal}
                 onClose={() => {
                   setShowEditModal(false);
@@ -302,7 +375,7 @@ export default function TextModPage() {
                     variant="accent"
                     label="Copy"
                     onClick={() => {
-                      // navigator.clipboard.writeText(data.mod!);
+                      navigator.clipboard.writeText(modText || "");
                     }}
                   />
                   <Button
