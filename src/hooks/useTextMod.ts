@@ -14,7 +14,7 @@ export const useTextMod = (id?: number) => {
       let query = supabase
         .from("mods")
         .select(
-          "id, name, description, created_at, main_image, mod_votes(*), mod_comments(*, user_id(id, username)), user_id(*)"
+          "id, name, description, created_at, last_modified, main_image, mod_votes(*), mod_comments(*, user_id(id, username)), user_id(*), mod_tags(tag)"
         )
         .eq("id", id);
 
@@ -37,6 +37,7 @@ export const useTextMod = (id?: number) => {
           };
         }),
         createdDate: new Date(data.created_at),
+        lastModified: data.last_modified ? new Date(data.last_modified) : null,
         creator: {
           name: data.user_id.username,
           id: data.user_id.id,
@@ -45,6 +46,7 @@ export const useTextMod = (id?: number) => {
         description: data.description,
         name: data.name,
         votes: data.mod_votes,
+        tags: data.mod_tags.map((t) => t.tag),
       };
 
       return fixedData;

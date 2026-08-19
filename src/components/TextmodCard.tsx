@@ -1,6 +1,8 @@
-import { Text } from "@/components/ui";
-import { getModTextmod } from "@/utils/supabase";
+import { Text, TagChip } from "@/components/ui";
+import { getModText } from "@/utils/modText";
+import { Tag } from "@/utils/tags";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export type TextmodCardProps = {
@@ -15,6 +17,8 @@ export type TextmodCardProps = {
   upvotes: number;
   downvotes: number;
   createdDate: Date;
+  lastModified?: Date | null;
+  tags?: Tag[];
 };
 
 export const TextmodCard = ({
@@ -26,7 +30,10 @@ export const TextmodCard = ({
   downvotes,
   upvotes,
   createdDate,
+  lastModified,
+  tags,
 }: TextmodCardProps) => {
+  const router = useRouter();
   const [copyText, setCopyText] = useState("Copy");
 
   return (
@@ -52,7 +59,7 @@ export const TextmodCard = ({
                 showHoverable
                 onClick={() => {
                   setCopyText("Loading!");
-                  getModTextmod(id).then((data) => {
+                  getModText(id).then((data) => {
                     if (data) {
                       navigator.clipboard.writeText(data);
                       setCopyText("Copied!");
@@ -73,6 +80,17 @@ export const TextmodCard = ({
               {description}
             </Text>
           </div>
+          {tags && tags.length > 0 && (
+            <div className="flex flex-row gap-2 flex-wrap mt-1">
+              {tags.map((tag) => (
+                <TagChip
+                  key={tag}
+                  tag={tag}
+                  onClick={() => router.push(`/search?tags=${tag}`)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col p-2">
@@ -83,7 +101,9 @@ export const TextmodCard = ({
             </Text>
           </Link>
           <Text tag="span" fontType="body">
-            {createdDate.toDateString()}
+            {lastModified && lastModified.getTime() !== createdDate.getTime()
+              ? `Modified ${lastModified.toDateString()}`
+              : createdDate.toDateString()}
           </Text>
         </div>
         <div className="flex flex-col">

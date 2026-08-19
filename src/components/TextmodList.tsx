@@ -1,28 +1,22 @@
 import { useTextmodsQuery } from "@/hooks/useTextmodsQuery";
 import { Loader } from "./Loader";
 import { TextmodCard, TextmodCardProps } from "./TextmodCard";
-import { Database } from "@/utils/schema";
-import { useTextModsCalculated } from "@/hooks/useTextModsCalculated";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 type QueryProps = {
   userName?: string;
-  orderBy?: "newest" | "oldest" | "top";
+  orderBy?: "newest" | "oldest" | "top" | "lastUpdated";
   lastDate?: Date;
   limit?: number;
 };
 
 type UseTextmodListProps = {
   query?: QueryProps;
-  table?: keyof Database["public"]["Tables"];
   cacheUrl?: string;
 };
 
-export const TextmodList = ({ table, query, cacheUrl }: UseTextmodListProps) => {
-  if (table) {
-    return <TableList table={table}  />;
-  }
+export const TextmodList = ({ query, cacheUrl }: UseTextmodListProps) => {
   if (query) {
     return <QueryList {...query} />;
   }
@@ -31,19 +25,6 @@ export const TextmodList = ({ table, query, cacheUrl }: UseTextmodListProps) => 
   }
   return null;
 };
-
-const TableList = ({table}: {table : keyof Database["public"]["Tables"]}) => {
-  const { data, error, isLoading } = useTextModsCalculated(table);
-
-  return (
-    <div>
-      {isLoading && <Loader />}
-      {error && <p>Error: {error.message}</p>}
-      {data &&
-        data.map((textmod) => <RenderCard key={textmod.id} textmod={textmod} />)}
-    </div>
-  );
-}
 
 const QueryList = ({ lastDate, limit, orderBy, userName }: QueryProps) => {
   const { data, error, isLoading } = useTextmodsQuery({
@@ -76,6 +57,7 @@ const CacheList = ({ cacheUrl }: { cacheUrl: string }) => {
         return {
           ...row,
           createdDate: new Date(row.createdDate),
+          lastModified: row.lastModified ? new Date(row.lastModified) : null,
         };
       });
       return fixed;

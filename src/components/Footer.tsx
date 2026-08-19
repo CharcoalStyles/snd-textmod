@@ -18,10 +18,10 @@ export const Footer = () => (
     </Link>
     |
     <Link
-      href="https://formbricks.charcoalstyles.com/s/cm3e2fg9g000c8n9e1omsasnv"
+      href="https://discordapp.com/users/375455152133636099"
       data-umami-event="feedback">
       <Text variant="black" onHover showHoverable>
-        Feedback
+        Feedback(Discord)
       </Text>
     </Link>
     |
@@ -34,7 +34,7 @@ export const Footer = () => (
     </Link>
     |
     <Text variant="black" >
-      v1.2 
+      v2.0
     </Text>
   </footer>
 );

@@ -5,10 +5,12 @@ import { supabaseAtom } from "@/utils/supabase";
 import { ModForm, TextmodFormData } from "./ModForm";
 import { useUser } from "@/hooks/useUser";
 import { Database } from "@/utils/schema";
+import { Tag } from "@/utils/tags";
 
 type ModModalProps = {
   preFill?: Omit<TextmodFormData, 'mod'>;
   mod?: string;
+  tags?: Tag[];
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: () => void;
@@ -19,6 +21,7 @@ type ModModalProps = {
 export const ModModal = ({
   preFill,
   mod,
+  tags,
   isOpen,
   onClose,
   onSubmit,
@@ -49,6 +52,7 @@ export const ModModal = ({
           <ModForm
             preFill={preFill}
             mod={mod}
+            tags={tags}
             onCancel={() => {
               onClose();
             }}
@@ -61,6 +65,7 @@ export const ModModal = ({
                 mainImageUrl,
                 secondaryImages,
                 secondaryImageUrls,
+                tags: submittedTags,
                 ...d
               } = data;
 
@@ -82,7 +87,7 @@ export const ModModal = ({
                   {
                     ...d,
                     main_image: mainImage ? null : mainImageUrl ? mainImageUrl : null,
-                    // secondary_images: null
+                    last_modified: new Date().toISOString(),
                   };
 
                 if (mainImage) {
@@ -110,18 +115,73 @@ export const ModModal = ({
                   submitData.main_image = imageUrl.publicUrl;
                 }
 
-                supabase
+                const { data: savedMods, error: saveError } = await supabase
                   .from("mods")
                   .upsert(submitData)
-                  .then(({ error, status }) => {
-                    if (error) {
-                      console.error(error);
-                      return;
-                    }
-                    onSubmit && onSubmit();
+                  .select();
+
+                if (saveError || !savedMods?.[0]) {
+                  setError(saveError?.message);
+                  setIsSaving(false);
+                  return;
+                }
+
+                const modId = savedMods[0].id;
+                const existingTags = tags || [];
+                const newTags = submittedTags || [];
+                const tagsToAdd = newTags.filter(
+                  (t) => !existingTags.includes(t)
+                );
+                const tagsToRemove = existingTags.filter(
+                  (t) => !newTags.includes(t)
+                );
+
+                if (tagsToAdd.length > 0) {
+                  const { error: tagError } = await supabase
+                    .from("mod_tags")
+                    .upsert(tagsToAdd.map((tag) => ({ mod_id: modId, tag })));
+                  if (tagError) {
+                    setError(tagError.message);
                     setIsSaving(false);
-                    onClose();
-                  });
+                    return;
+                  }
+                }
+
+                if (tagsToRemove.length > 0) {
+                  const { error: tagError } = await supabase
+                    .from("mod_tags")
+                    .delete()
+                    .eq("mod_id", modId)
+                    .in("tag", tagsToRemove);
+                  if (tagError) {
+                    setError(tagError.message);
+                    setIsSaving(false);
+                    return;
+                  }
+                }
+
+                const { data: session } = await supabase.auth.getSession();
+                const modTextRes = await fetch(
+                  `/api/modText/${modId}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${session.session?.access_token}`,
+                    },
+                    body: JSON.stringify({ modText: d.mod }),
+                  }
+                );
+
+                if (!modTextRes.ok) {
+                  setError("Failed to save mod text.");
+                  setIsSaving(false);
+                  return;
+                }
+
+                onSubmit && onSubmit();
+                setIsSaving(false);
+                onClose();
               }
             }}
             disabled={isSaving}

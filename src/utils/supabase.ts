@@ -3,7 +3,7 @@ import { atom } from "jotai";
 import { TextmodCardProps } from "@/components";
 import { Database } from "./schema";
 
-export const generateSupabaseClient = () => {
+export const generateSupabaseClient = (accessToken?: string) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -15,7 +15,9 @@ export const generateSupabaseClient = () => {
     throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
 
-  return createClient<Database>(supabaseUrl, supabaseKey);
+  return createClient<Database>(supabaseUrl, supabaseKey, accessToken ? {
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
+  } : undefined);
 };
 
 export const supabase = generateSupabaseClient();
@@ -56,6 +58,10 @@ export const sbToTextmods = (data: any) => {
         : 0,
       //@ts-ignore
       createdDate: new Date(realMod.created_at),
+      //@ts-ignore
+      lastModified: realMod.last_modified ? new Date(realMod.last_modified) : null,
+      //@ts-ignore
+      tags: realMod.mod_tags?.map((t: { tag: string }) => t.tag) || [],
       creator: {
         name: realMod.user_id.username,
         //@ts-ignore

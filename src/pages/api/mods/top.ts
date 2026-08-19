@@ -25,7 +25,7 @@ export default async function handler(
   // const { data, error } = await supabase
   let { error, data } = await supabase
     .from(table)
-    .select("*, mods(*, mod_votes(*), mod_comments(count), user_id(username))")
+    .select("*, mods(*, mod_votes(*), mod_comments(count), user_id(username), mod_tags(tag))")
     .limit(10);
 
   if (error || !data) {

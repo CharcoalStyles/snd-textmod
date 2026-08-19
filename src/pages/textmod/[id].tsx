@@ -3,14 +3,15 @@ import { Header, Loader } from "@/components";
 import { Comments } from "@/components/Comments";
 import { Footer } from "@/components/Footer";
 import { ModModal } from "@/components/ModModal";
-import { Button, Modal, Text } from "@/components/ui";
+import { Button, Modal, Text, TagChip } from "@/components/ui";
 import { useTextMod } from "@/hooks/useTextMod";
 import { Database } from "@/utils/schema";
-import { getModTextmod, supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
+import { getModText } from "@/utils/modText";
 import { useUser } from "@/hooks/useUser";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
   
 const findUserVote = (
   user: ReturnType<typeof useUser>,
@@ -73,12 +74,40 @@ export default function TextModPage() {
     : undefined;
   const { data, error, isLoading, refetch } = useTextMod(id);
   const [showTextMod, setShowTextMod] = useState(false);
+  const [showSplitTextMod, setShowSplitTextMod] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const sbUser = useUser();
   const [modText, setModText] = useState<string>();
-  const [copyText, setCopyText] = useState("Copy");
+  const [copyText, setCopyText] = useState("Copy Full TextMod");
 
-  console.log("data", data);
+  useEffect(() => {
+    if (!id) return;
+    getModText(id).then((text) => {
+      setModText(text ?? "");
+    });
+  }, [id]);
+
+  // Slice & Dice's paste box has a size limit, so split large mods into
+  // ≤50,000 character chunks on comma boundaries for separate copying.
+  const splitModText = useMemo(() => {
+    if (!modText) return [];
+    const parts = modText
+      .split(",")
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
+    const chunks: string[] = [];
+    let current = "";
+    parts.forEach((part) => {
+      if (current.length + part.length > 50_000) {
+        chunks.push(current);
+        current = part;
+      } else {
+        current += (current ? "," : "") + part;
+      }
+    });
+    if (current) chunks.push(current);
+    return chunks;
+  }, [modText]);
 
   const userVote = findUserVote(sbUser, data?.votes);
   const { user } = sbUser;
@@ -126,6 +155,11 @@ export default function TextModPage() {
                     <Text scale fontType="body">
                       Added: {data.createdDate.toDateString()}
                     </Text>
+                    {data.lastModified && (
+                      <Text scale fontType="body">
+                        Modified: {data.lastModified.toDateString()}
+                      </Text>
+                    )}
                     <div className="flex flex-row justify-between">
                       {user && user.id === data.creator.id && (
                         <>
@@ -134,11 +168,6 @@ export default function TextModPage() {
                             showHoverable
                             onHover
                             onClick={() => {
-                              getModTextmod(id!).then((data) => {
-                                if (data) {
-                                  setModText(data);
-                                }
-                              });
                               setShowEditModal(true);
                             }}
                             fontType="body">
@@ -202,6 +231,19 @@ export default function TextModPage() {
                   </div>
                 </div>
               </div>
+              {data.tags.length > 0 && (
+                <div className="flex flex-row gap-2 flex-wrap mt-2">
+                  {data.tags.map((tag) => (
+                    <TagChip
+                      key={tag}
+                      tag={tag}
+                      onClick={() =>
+                        router.push(`/search?tags=${tag}`)
+                      }
+                    />
+                  ))}
+                </div>
+              )}
               <hr className="my-2" />
               <div className="flex flex-col md:flex-row text-center gap-4">
                 <div className="flex-grow text-left">
@@ -215,35 +257,55 @@ export default function TextModPage() {
                       variant="accent"
                       label={copyText}
                       onClick={() => {
-                        setCopyText("Loading!");
-                        getModTextmod(id!).then((data) => {
-                          if (data) {
-                            navigator.clipboard.writeText(data);
-                            setCopyText("Copied!");
-                          } else {
-                            setCopyText("Error");
-                          }
-                          setTimeout(() => {
-                            setCopyText("Copy");
-                          }, 2000);
-                        });
+                        navigator.clipboard.writeText(modText || "");
+                        setCopyText("Copied!");
+                        setTimeout(() => {
+                          setCopyText("Copy Full TextMod");
+                        }, 2000);
                       }}
                     />
                     <Button
                       variant="secondary"
-                      label={showTextMod ? "Hide" : "Show"}
+                      label={
+                        showTextMod
+                          ? "Hide Full TextMod"
+                          : "Show Full TextMod"
+                      }
                       onClick={() => {
-                        getModTextmod(id!).then((data) => {
-                          if (data) {
-                            setModText(data);
-                          }
-                        });
                         setShowTextMod(!showTextMod);
                       }}
                     />
+                    {splitModText.length > 1 && (
+                      <Button
+                        variant="basic"
+                        label={
+                          showSplitTextMod
+                            ? "Hide Split TextMod Sections"
+                            : "Show Split TextMod"
+                        }
+                        onClick={() => {
+                          setShowSplitTextMod(!showSplitTextMod);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
+              {showSplitTextMod && (
+                <div className="flex flex-col gap-2 my-2">
+                  {splitModText.map((part, i) => (
+                    <Button
+                      key={i}
+                      fullWidth
+                      variant="secondary"
+                      label={`Part ${i + 1} (${part.length} characters)`}
+                      onClick={() => {
+                        navigator.clipboard.writeText(part);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
               <hr className="my-2" />
               {data.mainImage && (
                 <div className="flex flex-row justify-center">
@@ -274,6 +336,7 @@ export default function TextModPage() {
                   mainImageUrl: data.mainImage ? data.mainImage : undefined,
                 }}
                 mod={modText}
+                tags={data.tags}
                 isOpen={showEditModal}
                 onClose={() => {
                   setShowEditModal(false);
@@ -302,7 +365,7 @@ export default function TextModPage() {
                     variant="accent"
                     label="Copy"
                     onClick={() => {
-                      // navigator.clipboard.writeText(data.mod!);
+                      navigator.clipboard.writeText(modText || "");
                     }}
                   />
                   <Button
