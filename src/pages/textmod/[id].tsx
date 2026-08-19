@@ -268,7 +268,7 @@ export default function TextModPage() {
                 </div>
               )}
 
-              <div className="w-full flex flex-col border-y-2 border-gray-400 p-4">
+              <div className="w-full flex flex-col border-y-2 border-gray-400 p-4 mb-4">
                 <div className="flex flex-row gap-8">
                   <Button
                     variant="accent"
