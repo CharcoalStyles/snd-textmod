@@ -45,7 +45,7 @@ export const Comments = ({ comments, onUpdate, modId }: CommentProps) => {
             comments.map((c) => (
               <div
                 key={c.id}
-                className="w-1/3 flex-grow flex flex-col justify-between border-2 border-text px-4 py-2 my-2">
+                className="w-full mdw-1/3 flex-grow flex flex-col justify-between border-2 border-text px-4 py-2 my-2">
                 <div className="flex flex-row justify-between mb-4">
                   <div>
                     {c.comment.split("~n").map((l) => (
